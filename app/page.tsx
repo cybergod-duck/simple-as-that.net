@@ -80,11 +80,6 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Dark Mode Toggle — lower-left above footer bar */}
-      <div className="absolute bottom-6 left-6 z-40">
-        <ThemeToggle />
-      </div>
-
     </div>
   );
 }

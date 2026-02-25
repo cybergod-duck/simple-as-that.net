@@ -5,6 +5,7 @@ import './globals.css';
 import { ThemeProvider } from '../components/ThemeProvider';
 import FluidAI from '../components/FluidAI';
 import PageTransition from '../components/PageTransition';
+import ThemeToggle from '../components/ThemeToggle';
 import Link from 'next/link';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -50,7 +51,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     {/* ── STATIC BLACK FOOTER BAR ── */}
                     <footer className="w-full px-6 md:px-10 py-4 flex justify-between items-center z-50 bg-black border-t border-white/5 text-xs font-medium tracking-widest uppercase text-slate-600 shrink-0">
                         <div>©2026 Voss Neural Research LLC</div>
-                        <div className="flex gap-6">
+                        <div className="flex items-center gap-6">
+                            <ThemeToggle />
                             <Link href="/onboarding" className="hover:text-purple-400 transition-colors">Get Started</Link>
                             <Link href="/privacy" className="hover:text-cyan-400 transition-colors">Privacy</Link>
                         </div>
