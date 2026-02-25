@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 
 // Pre-scripted compliance horror knowledge base
-const KNOWLEDGE: { keywords: string[]; response: string }[] = [
+const KNOWLEDGE = [
     {
         keywords: ['fine', 'fines', 'penalty', 'penalties', 'how much'],
         response: "Under the 2026 state mandates, fines range from $2,500/violation (Tennessee) up to $7,500/violation (California CPRA). A single website can rack up hundreds of violations per day — that's potentially $750,000+ in annual exposure for a small business."
@@ -61,7 +61,7 @@ const FALLBACK_RESPONSES = [
     "Not sure about that, but I can tell you this — every day your site runs without proper privacy disclosures, you're accumulating potential violations. Ask me about state laws or our patch.",
 ]
 
-function findResponse(input: string): string {
+function findResponse(input) {
     const lower = input.toLowerCase()
     for (const entry of KNOWLEDGE) {
         if (entry.keywords.some(kw => lower.includes(kw))) {
@@ -73,11 +73,11 @@ function findResponse(input: string): string {
 
 export default function ComplianceBot() {
     const [isOpen, setIsOpen] = useState(false)
-    const [messages, setMessages] = useState<{ role: 'bot' | 'user'; text: string }[]>([
+    const [messages, setMessages] = useState([
         { role: 'bot', text: "I'm the Compliance Bot. Ask me about 2026 privacy fines, ADA lawsuits, cookie consent, or how to protect your site." }
     ])
     const [input, setInput] = useState('')
-    const scrollRef = useRef<HTMLDivElement>(null)
+    const scrollRef = useRef(null)
 
     useEffect(() => {
         if (scrollRef.current) {
