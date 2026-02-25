@@ -55,6 +55,9 @@ export default function Home() {
           <span className={`font-bold tracking-tight text-lg transition-colors ${isDark ? 'text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]' : 'text-slate-900 drop-shadow-[0_2px_10px_rgba(0,0,0,0.1)]'
             }`}>Simple As That</span>
         </div>
+        <Link href="/auth/login" className={`text-sm font-bold uppercase tracking-widest transition-colors ${isDark ? 'text-purple-300/60 hover:text-white' : 'text-slate-500 hover:text-slate-900'}`}>
+          Login
+        </Link>
       </header>
 
       {/* Hero */}
