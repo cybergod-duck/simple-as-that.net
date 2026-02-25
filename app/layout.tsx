@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '../components/ThemeProvider';
 import FluidAI from '../components/FluidAI';
+import PageTransition from '../components/PageTransition';
 import Link from 'next/link';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -39,9 +40,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         </Link>
                     </header>
 
-                    {/* ── MIDDLE CONTENT (fades per page) ── */}
+                    {/* ── MIDDLE CONTENT (fades between pages) ── */}
                     <main className="flex-1 relative overflow-hidden">
-                        {children}
+                        <PageTransition>
+                            {children}
+                        </PageTransition>
                     </main>
 
                     {/* ── STATIC BLACK FOOTER BAR ── */}
