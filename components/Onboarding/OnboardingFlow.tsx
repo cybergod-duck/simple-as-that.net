@@ -16,6 +16,7 @@ export default function OnboardingFlow() {
     const [formData, setFormData] = useState({
         name: '',
         industry: '',
+        existingUrl: '',
         goals: '',
         brand: null as any,
         plan: '',
@@ -172,6 +173,20 @@ export default function OnboardingFlow() {
                                 <datalist id="industry-list">
                                     {industries.map((ind, i) => <option key={i} value={ind} />)}
                                 </datalist>
+                            </div>
+
+                            <div className="group relative">
+                                <label className={`block text-xs font-bold uppercase tracking-widest mb-3 transition-colors text-slate-500`}>Already Have a Website? <span className="text-slate-700 normal-case">(optional)</span></label>
+                                <input
+                                    type="url"
+                                    value={formData.existingUrl}
+                                    onChange={(e: any) => setFormData({ ...formData, existingUrl: e.target.value })}
+                                    className={`w-full bg-transparent border-b-2 py-4 text-lg font-bold focus:outline-none transition-colors rounded-none ${isDark
+                                        ? 'border-purple-800 focus:border-cyan-400 text-white placeholder:text-slate-700'
+                                        : 'border-purple-200 focus:border-purple-500 text-slate-900 placeholder:text-slate-300'
+                                        }`}
+                                    placeholder="www.yourbusiness.com"
+                                />
                             </div>
 
                             <div className="group relative">
