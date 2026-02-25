@@ -65,7 +65,7 @@ export default function PrivacyPage() {
                         <li><strong className="text-slate-300">Right to Non-Discrimination</strong> — You will receive equal service and pricing regardless of your privacy choices.</li>
                     </ul>
                     <p className="text-slate-400">These rights apply under: TIPA (TN), RIDTPPA (RI), ICDPA (IN), MTCDPA (MT), OCPA (OR), CPRA (CA), SHIELD Act (NY), TDPSA (TX), and FTC Section 5 (Federal).</p>
-                    <p className="text-slate-400 mt-4">To exercise any of these rights, contact us at: <a href="mailto:info@crmindex.net" className="text-blue-400 underline">info@crmindex.net</a></p>
+                    <p className="text-slate-400 mt-4">To exercise any of these rights, contact us at: <a href="mailto:help@simple-as-that.net" className="text-blue-400 underline">help@simple-as-that.net</a></p>
                 </section>
 
                 <section className="space-y-4 text-sm leading-relaxed">
@@ -77,7 +77,7 @@ export default function PrivacyPage() {
                     <h2 className="text-lg font-semibold text-white">7. Contact</h2>
                     <p className="text-slate-400">For any privacy-related inquiries:<br />
                         <strong className="text-slate-300">Simple As That Labs</strong><br />
-                        Email: <a href="mailto:info@crmindex.net" className="text-blue-400 underline">info@crmindex.net</a>
+                        Email: <a href="mailto:help@simple-as-that.net" className="text-blue-400 underline">help@simple-as-that.net</a>
                     </p>
                 </section>
 

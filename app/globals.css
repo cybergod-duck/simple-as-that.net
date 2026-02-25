@@ -10,7 +10,7 @@
 
 @layer base {
   :root {
-    --background: #FAFAFA;
+    --background: #000000;
     --foreground: #09090B;
   }
 
@@ -24,7 +24,9 @@
   body {
     background-color: var(--background);
     color: var(--foreground);
-    @apply transition-colors duration-700 ease-[cubic-bezier(0.23, 1, 0.32, 1)];
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-duration: 700ms;
+    transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
   }
 }
 
@@ -62,4 +64,9 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Hide the Next.js dev overlay logo */
+nextjs-portal {
+  display: none !important;
 }

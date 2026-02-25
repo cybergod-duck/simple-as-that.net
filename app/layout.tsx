@@ -27,7 +27,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en" suppressHydrationWarning className={`${inter.variable}`}>
-            <body className="antialiased h-screen overflow-hidden bg-slate-50 dark:bg-black text-slate-900 dark:text-slate-100 font-sans transition-colors duration-500 flex flex-col">
+            <head>
+                <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&true)){document.documentElement.classList.add('dark')}}catch(e){}})()` }} />
+            </head>
+            <body className="antialiased h-screen overflow-hidden bg-black dark:bg-black text-slate-900 dark:text-slate-100 font-sans transition-colors duration-500 flex flex-col" style={{ backgroundColor: '#000000' }}>
                 <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
 
                     {/* ── STATIC BLACK HEADER BAR ── */}
@@ -42,17 +45,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     </header>
 
                     {/* ── MIDDLE CONTENT (fades between pages) ── */}
-                    <main className="flex-1 relative overflow-hidden">
+                    <main className="flex-1 relative overflow-y-auto">
                         <PageTransition>
                             {children}
                         </PageTransition>
                     </main>
 
+                    {/* ── FLOATING THEME TOGGLE (bottom-left, above footer) ── */}
+                    <div className="fixed bottom-16 left-6 z-50">
+                        <ThemeToggle />
+                    </div>
+
                     {/* ── STATIC BLACK FOOTER BAR ── */}
                     <footer className="w-full px-6 md:px-10 py-4 flex justify-between items-center z-50 bg-black border-t border-white/5 text-xs font-medium tracking-widest uppercase text-slate-600 shrink-0">
                         <div>©2026 Voss Neural Research LLC</div>
                         <div className="flex items-center gap-6">
-                            <ThemeToggle />
                             <Link href="/onboarding" className="hover:text-purple-400 transition-colors">Get Started</Link>
                             <Link href="/privacy" className="hover:text-cyan-400 transition-colors">Privacy</Link>
                         </div>

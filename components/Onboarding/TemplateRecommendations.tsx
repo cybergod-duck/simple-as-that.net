@@ -80,7 +80,7 @@ const TIERS = [
     }
 ];
 
-export default function TemplateRecommendations({ industry, onComplete }: { industry: string, onComplete: (plan: string) => void }) {
+export default function TemplateRecommendations({ industry, budget, onComplete }: { industry: string, budget: string, onComplete: (plan: string) => void }) {
     const { theme } = useTheme();
     const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
     const [mounted, setMounted] = useState(false);
@@ -92,6 +92,13 @@ export default function TemplateRecommendations({ industry, onComplete }: { indu
     if (!mounted) return null;
 
     const isDark = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+    const budgetMap: Record<string, string[]> = {
+        starter: ['landing', 'starter'],
+        mid: ['essential', 'pro'],
+        premium: ['elite'],
+    };
+    const filteredTiers = budget && budgetMap[budget] ? TIERS.filter(t => budgetMap[budget].includes(t.id)) : TIERS;
 
     const handleNext = () => {
         if (selectedPlan) {
@@ -124,7 +131,7 @@ export default function TemplateRecommendations({ industry, onComplete }: { indu
             <div className="relative w-full max-w-[1600px] mx-auto px-4 z-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-5 md:gap-6 w-full relative z-10 perspective-1000">
 
-                    {TIERS.map((tier, index) => (
+                    {TIERS.map((tier: any, index: number) => (
                         <div
                             key={tier.id}
                             onClick={() => setSelectedPlan(tier.id)}
