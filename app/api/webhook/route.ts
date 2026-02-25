@@ -6,11 +6,13 @@ import { createClient } from '@supabase/supabase-js';
 // Initialize Stripe (Optional DB logic removed for deployment stability)
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_mock');
 
-// Supabase Admin client for post-checkout auth
-const supabaseAdmin = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-    process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-);
+// Supabase Admin client for post-checkout auth (lazy init to avoid build errors)
+function getSupabaseAdmin() {
+    return createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+        process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+    );
+}
 
 export async function POST(req: Request) {
     try {
@@ -49,7 +51,7 @@ export async function POST(req: Request) {
             // Post-Checkout Auto-Auth: Send magic link email to the customer
             if (email) {
                 try {
-                    const { error } = await supabaseAdmin.auth.admin.generateLink({
+                    const { error } = await getSupabaseAdmin().auth.admin.generateLink({
                         type: 'magiclink',
                         email: email,
                         options: {
