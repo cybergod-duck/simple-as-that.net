@@ -163,7 +163,7 @@ export default function FluidAI() {
                     {isOpen ? (
                         <svg className="w-6 h-6 text-slate-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"></path></svg>
                     ) : (
-                        <img src="/favicon_io/favicon-32x32.png" alt="Simple AI" className="w-8 h-8 drop-shadow-[0_0_10px_rgba(0,255,255,0.6)]" />
+                        <img src="/favicon_io/favicon-32x32.png" alt="Simple AI" className="w-10 h-10 rounded-full bg-black p-1 drop-shadow-[0_0_10px_rgba(0,255,255,0.6)]" />
                     )}
                 </div>
             </button>
