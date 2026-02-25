@@ -1,8 +1,16 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
+import { createClient } from '@supabase/supabase-js';
+
 // Initialize Stripe (Optional DB logic removed for deployment stability)
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_mock');
+
+// Supabase Admin client for post-checkout auth
+const supabaseAdmin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+);
 
 export async function POST(req: Request) {
     try {
@@ -37,7 +45,26 @@ export async function POST(req: Request) {
                 : null;
 
             console.log(`[WEBHOOK SUCCESS] License granted to: ${email} | Domain: ${normalizedDomain || 'not provided'}`);
-            // TODO: In production, integrate with alternative DB or Stripe Metadata to track this
+
+            // Post-Checkout Auto-Auth: Send magic link email to the customer
+            if (email) {
+                try {
+                    const { error } = await supabaseAdmin.auth.admin.generateLink({
+                        type: 'magiclink',
+                        email: email,
+                        options: {
+                            redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://simple-as-that.net'}/auth/callback`,
+                        },
+                    });
+                    if (error) {
+                        console.error(`[AUTH] Failed to send magic link to ${email}:`, error.message);
+                    } else {
+                        console.log(`[AUTH] Magic link sent to ${email} — "Your network is ready. Log in to your NOC."`);
+                    }
+                } catch (authErr: any) {
+                    console.error('[AUTH] Magic link dispatch error:', authErr.message);
+                }
+            }
         }
 
         return NextResponse.json({ received: true });
