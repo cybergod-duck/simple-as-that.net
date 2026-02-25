@@ -1,47 +1,48 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function PageTransition({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
-    const [phase, setPhase] = useState<'visible' | 'fading-out' | 'fading-in'>('visible');
-    const [displayChildren, setDisplayChildren] = useState(children);
-    const prevPathname = useRef(pathname);
+    const [isVisible, setIsVisible] = useState(true);
+    const [currentChildren, setCurrentChildren] = useState(children);
+    const [currentPath, setCurrentPath] = useState(pathname);
 
     useEffect(() => {
-        // Only transition on actual route changes
-        if (pathname === prevPathname.current) {
-            setDisplayChildren(children);
-            return;
+        if (pathname !== currentPath) {
+            // New page detected — fade out
+            setIsVisible(false);
+
+            // After fade-out completes, swap content and fade in
+            const timer = setTimeout(() => {
+                setCurrentChildren(children);
+                setCurrentPath(pathname);
+                // Small delay to ensure DOM updates before fade-in
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        setIsVisible(true);
+                    });
+                });
+            }, 350);
+
+            return () => clearTimeout(timer);
+        } else {
+            // Same path, just update children (e.g. state changes within page)
+            setCurrentChildren(children);
         }
-        prevPathname.current = pathname;
-
-        // Phase 1: Fade out current content (400ms)
-        setPhase('fading-out');
-
-        const swapTimer = setTimeout(() => {
-            // Phase 2: Swap content while invisible
-            setDisplayChildren(children);
-
-            // Phase 3: Fade in new content (400ms)
-            requestAnimationFrame(() => {
-                setPhase('fading-in');
-                setTimeout(() => setPhase('visible'), 400);
-            });
-        }, 400);
-
-        return () => clearTimeout(swapTimer);
-    }, [pathname, children]);
-
-    const opacity =
-        phase === 'fading-out' ? 'opacity-0' :
-            phase === 'fading-in' ? 'opacity-100' :
-                'opacity-100';
+    }, [pathname, children, currentPath]);
 
     return (
-        <div className={`w-full h-full transition-opacity duration-[400ms] ease-in-out ${opacity}`}>
-            {displayChildren}
+        <div
+            style={{
+                opacity: isVisible ? 1 : 0,
+                transition: 'opacity 350ms ease-in-out',
+                width: '100%',
+                height: '100%',
+            }}
+        >
+            {currentChildren}
         </div>
     );
 }
