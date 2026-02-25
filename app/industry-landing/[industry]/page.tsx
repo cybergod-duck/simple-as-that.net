@@ -8,7 +8,8 @@ interface PageProps {
 
 export async function generateStaticParams() {
     const industries = getIndustryData();
-    return industries.map((ind) => ({
+    // Limit to top 10 for build speed. The rest build dynamically on-demand (ISR/SSR).
+    return industries.slice(0, 10).map((ind) => ({
         industry: ind.slug.replace('website-creation-for-', ''),
     }));
 }
