@@ -2,7 +2,7 @@
 
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  
+
   --animate-pulse-slow: pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --animate-spin-slow: spin 20s linear infinite;
   --animate-spin-reverse: spin 25s linear infinite reverse;
@@ -24,7 +24,7 @@
   body {
     background-color: var(--background);
     color: var(--foreground);
-    @apply transition-colors duration-700 ease-[cubic-bezier(0.23,1,0.32,1)];
+    @apply transition-colors duration-700 ease-[cubic-bezier(0.23, 1, 0.32, 1)];
   }
 }
 
@@ -36,8 +36,30 @@
   .ease-premium {
     transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
   }
-  
+
   .glass-panel {
     @apply bg-white/40 dark:bg-black/40 backdrop-blur-3xl border border-white/20 dark:border-white/5;
+  }
+}
+
+@keyframes pageIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
