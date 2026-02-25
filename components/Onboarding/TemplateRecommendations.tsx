@@ -12,6 +12,7 @@ const TIERS = [
 export default function TemplateRecommendations({ industry, onComplete }: { industry: string, onComplete: (plan: string) => void }) {
     const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
     const [addCompliance, setAddCompliance] = useState<boolean>(false);
+    const [addLogo, setAddLogo] = useState<boolean>(false);
 
     const handleNext = () => {
         if (selectedPlan) {
@@ -90,8 +91,35 @@ export default function TemplateRecommendations({ industry, onComplete }: { indu
                 </div>
             </div>
 
+            {/* UPSELL: Nano Banana Custom Logo */}
+            <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-100 dark:border-blue-800 rounded-xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-4 opacity-10">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                </div>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
+                    <div>
+                        <h4 className="flex items-center text-lg font-bold text-blue-900 dark:text-blue-100 mb-2">
+                            <svg className="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                            Custom Logo
+                        </h4>
+                        <p className="text-sm text-blue-800 dark:text-blue-200">
+                            Don't have a professional brand image yet? For a one-time <strong className="font-bold">$50 fee</strong>, our design algorithm will generate an HD custom {industry.toLowerCase() || 'business'} logo that perfectly matches your new site.
+                        </p>
+                    </div>
+
+                    <button
+                        onClick={() => setAddLogo(!addLogo)}
+                        className={`shrink-0 px-6 py-2.5 rounded-lg border-2 font-bold transition-all ${addLogo
+                            ? 'bg-blue-600 border-blue-600 text-white shadow-md'
+                            : 'bg-white dark:bg-gray-800 border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-300 hover:border-blue-500'}`}
+                    >
+                        {addLogo ? '✓ Added to Cart' : '+ Add Custom Logo ($50)'}
+                    </button>
+                </div>
+            </div>
+
             {/* UPSELL: State Compliance Add-On */}
-            <div className="mt-8 p-6 bg-gradient-to-r from-teal-50 to-green-50 dark:from-teal-900/20 dark:to-green-900/20 border border-teal-100 dark:border-teal-800 rounded-xl relative overflow-hidden">
+            <div className="mt-6 p-6 bg-gradient-to-r from-teal-50 to-green-50 dark:from-teal-900/20 dark:to-green-900/20 border border-teal-100 dark:border-teal-800 rounded-xl relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-4 opacity-10">
                     <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                 </div>
