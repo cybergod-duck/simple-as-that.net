@@ -19,12 +19,8 @@ export default function FluidAI() {
     const [isThinking, setIsThinking] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    // Auto-open and contextualize based on route
+    // Contextualize based on route (but never auto-open)
     useEffect(() => {
-        // Don't auto-open on home or onboarding — it overlaps the form
-        if (pathname === '/' || pathname === '/onboarding') return;
-
-        setIsOpen(true);
         if (pathname.includes('/industry-landing/')) {
             const industry = pathname.split('/').pop()?.replace('-', ' ');
             setMessages(prev => [...prev, {
