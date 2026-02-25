@@ -1,8 +1,5 @@
 import { notFound } from 'next/navigation';
 import { getIndustryData } from '../../../utils/csvParser';
-import NanoBananaLogo from '../../../components/Upsells/NanoBananaLogo';
-import ComplianceShield from '../../../components/Upsells/ComplianceShield';
-import JsonLdService from '../../../components/SEO/JsonLdService';
 import AIOverviewSummary from '../components/AIOverviewSummary';
 
 interface PageProps {
@@ -30,7 +27,20 @@ export default function IndustryLandingPage({ params }: PageProps) {
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-dark-navy">
-            <JsonLdService industry={data.industry} painPoint={painPoint} />
+            {/* Inline JSON-LD */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "Service",
+                        "serviceType": "Website Design",
+                        "provider": { "@type": "Organization", "name": "Simple As That" },
+                        "areaServed": { "@type": "Country", "name": "US" },
+                        "description": `Professional website creation for ${data.industry} explicitly designed to solve ${painPoint}.`
+                    })
+                }}
+            />
 
             {/* Hero Section - Premium Overhaul */}
             <section className="bg-[#0A0F1C] text-white pt-32 pb-40 px-4 relative overflow-hidden flex flex-col items-center justify-center min-h-[85vh]">
@@ -127,12 +137,18 @@ export default function IndustryLandingPage({ params }: PageProps) {
                     </h2>
                     <p className="text-center text-gray-400 mb-16 text-lg">Bolt-on infrastructure to instantly elevate your authority.</p>
 
-                    <div className="flex flex-col gap-6">
-                        <div className="transform transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(59,130,246,0.1)] rounded-2xl bg-gray-900/40 p-1 border border-gray-800/60 backdrop-blur-sm">
-                            <NanoBananaLogo onAdd={() => { }} />
+                    <div className="flex flex-col gap-6 text-left">
+                        <div className="transform transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(59,130,246,0.1)] rounded-2xl bg-[#131B2F] p-8 border border-gray-800/60 backdrop-blur-sm flex justify-between items-center">
+                            <div>
+                                <h4 className="text-xl font-bold text-white mb-2">Custom Logo Generation</h4>
+                                <p className="text-gray-400">Instantly generate an HD semantic logo mapped to your custom {data.industry.toLowerCase()} palette. <span className="text-white font-bold ml-2">+$50</span></p>
+                            </div>
                         </div>
-                        <div className="transform transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(16,185,129,0.1)] rounded-2xl bg-gray-900/40 p-1 border border-gray-800/60 backdrop-blur-sm">
-                            <ComplianceShield onAdd={() => { }} />
+                        <div className="transform transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(16,185,129,0.1)] rounded-2xl bg-[#131B2F] p-8 border border-gray-800/60 backdrop-blur-sm flex justify-between items-center">
+                            <div>
+                                <h4 className="text-xl font-bold text-white mb-2">State Compliance Shield</h4>
+                                <p className="text-gray-400">Auto-deploy a verified compliance badge directly to your footer to comply with 2026 digital state privacy regulations. <span className="text-white font-bold ml-2">+$30/mo</span></p>
+                            </div>
                         </div>
                     </div>
 
