@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getIndustryData } from '../../../utils/csvParser';
-import AIOverviewSummary from '../components/AIOverviewSummary';
+import AIOverviewSummary from '../../../components/AIOverviewSummary';
 
 interface PageProps {
     params: { industry: string };
