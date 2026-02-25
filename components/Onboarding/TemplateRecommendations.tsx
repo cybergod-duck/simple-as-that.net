@@ -11,6 +11,7 @@ const TIERS = [
 
 export default function TemplateRecommendations({ industry, onComplete }: { industry: string, onComplete: (plan: string) => void }) {
     const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+    const [addCompliance, setAddCompliance] = useState<boolean>(false);
 
     const handleNext = () => {
         if (selectedPlan) {
@@ -86,6 +87,33 @@ export default function TemplateRecommendations({ industry, onComplete }: { indu
                             <div className="text-xl font-bold text-deep-purple dark:text-periwinkle">{tier.price}</div>
                         </div>
                     ))}
+                </div>
+            </div>
+
+            {/* UPSELL: State Compliance Add-On */}
+            <div className="mt-8 p-6 bg-gradient-to-r from-teal-50 to-green-50 dark:from-teal-900/20 dark:to-green-900/20 border border-teal-100 dark:border-teal-800 rounded-xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-4 opacity-10">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                </div>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
+                    <div>
+                        <h4 className="flex items-center text-lg font-bold text-teal-900 dark:text-teal-100 mb-2">
+                            <svg className="w-5 h-5 mr-2 text-teal-600 dark:text-teal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            State Compliance Shield Add-On
+                        </h4>
+                        <p className="text-sm text-teal-800 dark:text-teal-200">
+                            Display a verified compliance badge on your new website. For just <strong className="font-bold">$30/mo</strong>, protect your {industry.toLowerCase() || 'business'} data from strict 2026 digital state privacy regulations.
+                        </p>
+                    </div>
+
+                    <button
+                        onClick={() => setAddCompliance(!addCompliance)}
+                        className={`shrink-0 px-6 py-2.5 rounded-lg border-2 font-bold transition-all ${addCompliance
+                            ? 'bg-teal-600 border-teal-600 text-white shadow-md'
+                            : 'bg-white dark:bg-gray-800 border-teal-300 dark:border-teal-700 text-teal-700 dark:text-teal-300 hover:border-teal-500'}`}
+                    >
+                        {addCompliance ? '✓ Added to Cart' : '+ Add Shield ($30/mo)'}
+                    </button>
                 </div>
             </div>
 

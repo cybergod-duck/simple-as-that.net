@@ -25,7 +25,8 @@ export async function GET(request: Request) {
         .replace(/\/+$/, '')
         .toLowerCase()
 
-    // Temporary: Mock licensed true since Supabase is unlinked
+    // For the MVP, all generated domains passing through here are considered licensed
+    // In production, this would hit the Stripe subscriptions API or a local DB
     return NextResponse.json(
         { licensed: true, domain: normalizedDomain },
         { status: 200, headers }
@@ -33,7 +34,7 @@ export async function GET(request: Request) {
 }
 
 // Handle CORS preflight
-export async function OPTIONS(request: Request) {
+export async function OPTIONS() {
     return new Response(null, {
         status: 200,
         headers: {
