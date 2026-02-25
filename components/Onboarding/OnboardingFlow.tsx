@@ -100,7 +100,7 @@ export default function OnboardingFlow() {
     const dynamicGradient = getIndustryGradient(formData.industry);
 
     return (
-        <div className={`min-h-screen relative flex justify-center items-center py-20 px-4 sm:px-6 lg:px-8 font-sans overflow-hidden transition-colors duration-1000 ${isDark ? 'bg-[#0d0521] text-slate-200' : 'bg-[#FAFAFA] text-slate-900'
+        <div className={`w-full h-full min-h-[calc(100vh-120px)] relative flex justify-center items-center py-12 px-4 sm:px-6 lg:px-8 font-sans overflow-hidden transition-colors duration-1000 ${isDark ? 'bg-[#0d0521] text-slate-200' : 'bg-[#FAFAFA] text-slate-900'
             }`}>
             {/* Background Base */}
             <div className={`absolute inset-0 z-0 transition-colors duration-1000 ${isDark ? 'bg-[#0d0521]' : 'bg-[#FAFAFA]'}`}></div>
@@ -115,25 +115,7 @@ export default function OnboardingFlow() {
                 : 'bg-[linear-gradient(rgba(168,85,247,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.05)_1px,transparent_1px)]'
                 }`}></div>
 
-            {/* Header / Native App Bar */}
-            <div className={`absolute top-0 w-full px-8 py-6 flex justify-between items-center z-50 border-b backdrop-blur-md transition-colors ${isDark ? 'border-purple-500/20 bg-[#0d0521]/80' : 'border-slate-200 bg-white/50'
-                }`}>
-                <div className="flex items-center gap-4">
-                    {/* Glowing Wireframe Globe Icon */}
-                    <div className="relative w-8 h-8 flex items-center justify-center">
-                        <img
-                            src="/favicon_io/android-chrome-192x192.png"
-                            alt="Simple-As-That Logo"
-                            className={`w-6 h-6 absolute object-contain transition-all ${isDark
-                                ? 'drop-shadow-[0_0_8px_rgba(0,255,255,0.8)]'
-                                : 'drop-shadow-[0_2px_4px_rgba(0,255,255,0.5)] invert filter brightness-0'
-                                }`}
-                        />
-                    </div>
-                    <span className={`font-bold tracking-tight text-sm transition-colors ${isDark ? 'text-purple-300 drop-shadow-[0_0_8px_rgba(168,85,247,0.4)]' : 'text-slate-900 drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)]'
-                        }`}>Simple As That</span>
-                </div>
-            </div>
+
 
             {/* Core Wizard Container */}
             <div className="w-full max-w-2xl relative z-10 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]">
