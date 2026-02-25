@@ -20,7 +20,8 @@ export default function FluidAI() {
 
     // Auto-open and contextualize based on route
     useEffect(() => {
-        if (pathname === '/') return; // Don't auto-open on home where the main flow is
+        // Don't auto-open on home or onboarding — it overlaps the form
+        if (pathname === '/' || pathname === '/onboarding') return;
 
         setIsOpen(true);
         if (pathname.includes('/industry-landing/')) {
@@ -74,19 +75,20 @@ export default function FluidAI() {
 
             {/* The Chat Window */}
             <div className={`transition-all duration-300 transform origin-bottom-right ${isOpen ? 'scale-100 opacity-100 mb-4' : 'scale-0 opacity-0 h-0 w-0 overflow-hidden'}`}>
-                <div className="w-[380px] h-[500px] rounded-2xl border border-cyan-500/30 bg-black/90 backdrop-blur-xl shadow-[0_0_40px_rgba(0,255,255,0.15)] flex flex-col overflow-hidden">
+                <div className="w-[380px] h-[500px] rounded-2xl border border-purple-500/30 bg-[#0d0521]/95 backdrop-blur-xl shadow-[0_0_40px_rgba(168,85,247,0.2)] flex flex-col overflow-hidden">
 
                     {/* Header */}
-                    <div className="p-4 border-b border-white/10 bg-gradient-to-r from-black via-cyan-950/20 to-black flex justify-between items-center">
+                    <div className="p-4 border-b border-purple-500/20 bg-gradient-to-r from-[#0d0521] via-purple-950/40 to-[#0d0521] flex justify-between items-center">
                         <div className="flex items-center gap-3">
                             <div className="relative">
-                                <div className="absolute inset-0 bg-cyan-400 blur-md rounded-full animate-pulse opacity-50"></div>
+                                <div className="absolute inset-0 bg-purple-400 blur-md rounded-full animate-pulse opacity-50"></div>
                                 <div className="w-2 h-2 rounded-full bg-cyan-400 relative z-10 shadow-[0_0_10px_#00ffff]"></div>
                             </div>
+                            <img src="/favicon_io/favicon-32x32.png" alt="Simple AI" className="w-6 h-6" />
                             <div>
                                 <h3 className="text-white font-bold text-sm tracking-widest uppercase flex items-center gap-2">
                                     Simple AI
-                                    <span className="text-[9px] bg-white/10 px-1.5 py-0.5 rounded text-cyan-300">ONLINE</span>
+                                    <span className="text-[9px] bg-purple-500/20 px-1.5 py-0.5 rounded text-cyan-300 border border-purple-500/30">ONLINE</span>
                                 </h3>
                             </div>
                         </div>
