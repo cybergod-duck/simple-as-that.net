@@ -39,7 +39,7 @@ export default function Home() {
       </div>
 
       {/* Header */}
-      <header className={`absolute top-0 w-full px-8 md:px-12 py-8 flex justify-between items-center z-40 border-b backdrop-blur-md transition-colors ${isDark ? 'border-purple-500/20 bg-[#0d0521]/80' : 'border-slate-200/50 bg-white/50'
+      <header className={`absolute top-0 w-full px-8 md:px-12 py-8 flex justify-between items-center z-40 border-b backdrop-blur-md transition-colors ${isDark ? 'border-white/5 bg-black' : 'border-slate-200/50 bg-white/50'
         }`}>
         <div className="flex items-center gap-4">
           <div className="relative w-10 h-10 flex items-center justify-center">
@@ -118,7 +118,7 @@ export default function Home() {
         }`}></div>
 
       {/* Footer */}
-      <footer className={`absolute bottom-0 w-full px-8 md:px-12 py-8 flex justify-between items-center text-xs font-medium tracking-widest uppercase z-40 transition-colors ${isDark ? 'text-slate-600' : 'text-slate-500'
+      <footer className={`absolute bottom-0 w-full px-8 md:px-12 py-8 flex justify-between items-center text-xs font-medium tracking-widest uppercase z-40 transition-colors ${isDark ? 'text-slate-600 bg-black border-t border-white/5' : 'text-slate-500'
         }`}>
         <div>
           ©2026 Voss Neural Research LLC

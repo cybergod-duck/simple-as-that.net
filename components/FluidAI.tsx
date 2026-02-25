@@ -71,7 +71,7 @@ export default function FluidAI() {
     };
 
     return (
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <div className="fixed bottom-20 right-6 z-50 flex flex-col items-end">
 
             {/* The Chat Window */}
             <div className={`transition-all duration-300 transform origin-bottom-right ${isOpen ? 'scale-100 opacity-100 mb-4' : 'scale-0 opacity-0 h-0 w-0 overflow-hidden'}`}>
@@ -150,23 +150,20 @@ export default function FluidAI() {
             {/* The Floating Bubble Node */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-500 group relative ${isOpen ? 'bg-black border border-white/10 scale-90' : 'bg-black border border-cyan-500/50 shadow-[0_0_30px_rgba(0,255,255,0.3)] hover:scale-110 hover:shadow-[0_0_50px_rgba(0,255,255,0.5)]'
+                className={`w-16 h-16 rounded-full flex items-center justify-center transition-all duration-500 group relative ${isOpen ? 'bg-black border border-white/10 scale-90' : 'bg-black border-2 border-purple-500/50 shadow-[0_0_30px_rgba(168,85,247,0.3)] hover:scale-110 hover:shadow-[0_0_50px_rgba(168,85,247,0.5)]'
                     }`}
             >
                 {/* Background pulse effect when closed */}
                 {!isOpen && (
-                    <div className="absolute inset-0 rounded-full bg-cyan-500/20 blur-md animate-pulse"></div>
+                    <div className="absolute inset-0 rounded-full bg-purple-500/20 blur-md animate-pulse"></div>
                 )}
 
-                {/* Internal Node visual */}
-                <div className="relative z-10 w-6 h-6 flex items-center justify-center">
+                {/* Logo / Close icon */}
+                <div className="relative z-10 w-8 h-8 flex items-center justify-center">
                     {isOpen ? (
                         <svg className="w-6 h-6 text-slate-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"></path></svg>
                     ) : (
-                        <>
-                            <div className="absolute inset-0 border-2 border-cyan-400 rounded-full animate-ping opacity-20 [animation-duration:3s]"></div>
-                            <div className="w-3 h-3 bg-cyan-400 rounded-full shadow-[0_0_15px_#00ffff]"></div>
-                        </>
+                        <img src="/favicon_io/favicon-32x32.png" alt="Simple AI" className="w-8 h-8 drop-shadow-[0_0_10px_rgba(0,255,255,0.6)]" />
                     )}
                 </div>
             </button>
