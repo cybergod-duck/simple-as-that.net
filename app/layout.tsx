@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en" suppressHydrationWarning className={`${inter.variable}`}>
-            <body className="antialiased min-h-screen bg-slate-50 dark:bg-[#0d0521] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-500 flex flex-col">
+            <body className="antialiased h-screen overflow-hidden bg-slate-50 dark:bg-black text-slate-900 dark:text-slate-100 font-sans transition-colors duration-500 flex flex-col">
                 <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
 
                     {/* ── STATIC BLACK HEADER BAR ── */}

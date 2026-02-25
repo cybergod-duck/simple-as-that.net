@@ -101,7 +101,7 @@ export default function OnboardingFlow() {
     const dynamicGradient = getIndustryGradient(formData.industry);
 
     return (
-        <div className={`w-full h-full min-h-[calc(100vh-120px)] relative flex justify-center items-center py-12 px-4 sm:px-6 lg:px-8 font-sans overflow-hidden transition-colors duration-1000 ${isDark ? 'bg-[#0d0521] text-slate-200' : 'bg-[#FAFAFA] text-slate-900'
+        <div className={`w-full h-full overflow-hidden relative flex justify-center items-center py-4 px-4 sm:px-6 lg:px-8 font-sans transition-colors duration-1000 ${isDark ? 'bg-[#0d0521] text-slate-200' : 'bg-[#FAFAFA] text-slate-900'
             }`}>
             {/* Background Base */}
             <div className={`absolute inset-0 z-0 transition-colors duration-1000 ${isDark ? 'bg-[#0d0521]' : 'bg-[#FAFAFA]'}`}></div>
@@ -123,7 +123,7 @@ export default function OnboardingFlow() {
 
                 {/* Step 1: Initial Details */}
                 {step === 'initial' && (
-                    <div className="animate-fade-in space-y-12">
+                    <div className="animate-fade-in space-y-6">
                         <div className="text-center md:text-left">
                             <h2 className={`text-4xl md:text-5xl font-black tracking-tighter mb-4 transition-colors ${isDark ? 'text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]' : 'text-slate-900'
                                 }`}>Let's build your website.</h2>
@@ -133,7 +133,7 @@ export default function OnboardingFlow() {
                             </p>
                         </div>
 
-                        <form onSubmit={handleInitialSubmit} className="space-y-10">
+                        <form onSubmit={handleInitialSubmit} className="space-y-4">
                             {/* Seamless Input Fields */}
                             <div className="group relative">
                                 <label className={`block text-xs font-bold uppercase tracking-widest mb-3 transition-colors ${formData.name
