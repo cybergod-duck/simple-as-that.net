@@ -1,25 +1,43 @@
 @import "tailwindcss";
 
-:root {
-  --background: #050511;
-  --foreground: #f1f5f9;
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  
+  --animate-pulse-slow: pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-spin-slow: spin 20s linear infinite;
+  --animate-spin-reverse: spin 25s linear infinite reverse;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+@layer base {
+  :root {
+    --background: #FAFAFA;
+    --foreground: #09090B;
+  }
+
+  .dark {
+    --background: #000000;
+    --foreground: #FAFAFA;
+  }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    @apply transition-colors duration-700 ease-[cubic-bezier(0.23,1,0.32,1)];
+  }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.8s ease-out forwards;
+/* 
+  Micro-Animations (Zero UI Requirements)
+  Specifically tuned cubic-bezier curves to give that "Apple/Vercel" premium feel
+*/
+@layer utilities {
+  .ease-premium {
+    transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  
+  .glass-panel {
+    @apply bg-white/40 dark:bg-black/40 backdrop-blur-3xl border border-white/20 dark:border-white/5;
+  }
 }
