@@ -206,7 +206,7 @@ export default function OnboardingFlow() {
                                         : 'border-purple-200 focus:border-purple-500 text-slate-900 [&>option]:bg-white'
                                         }`}
                                 >
-                                    <option value="" disabled hidden className="text-slate-500">Select conversion path...</option>
+                                    <option value="" disabled hidden className="text-slate-500">What are you looking for?</option>
                                     <option value="leads">Get More Customers (Leads)</option>
                                     <option value="sales">Sell Products Online (Sales)</option>
                                     <option value="portfolio">Build Trust & Credibility (Portfolio)</option>

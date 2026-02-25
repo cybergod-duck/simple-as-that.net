@@ -11,6 +11,7 @@ interface Message {
 export default function FluidAI() {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
+    const [showBubble, setShowBubble] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
         { role: 'ai', content: 'Hey there! 👋 I\'m Simple AI. How can I help you with your website today?' }
     ]);
@@ -32,6 +33,19 @@ export default function FluidAI() {
             }]);
         }
     }, [pathname]);
+
+    // Show "Need Help?" bubble after 3 seconds if not open
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (!isOpen) setShowBubble(true);
+        }, 3000);
+        return () => clearTimeout(timer);
+    }, []);
+
+    // Hide bubble when chat opens
+    useEffect(() => {
+        if (isOpen) setShowBubble(false);
+    }, [isOpen]);
 
     useEffect(() => {
         if (messagesEndRef.current) {
@@ -147,23 +161,27 @@ export default function FluidAI() {
                 </div>
             </div>
 
+            {/* "Need Help?" Speech Bubble */}
+            {showBubble && !isOpen && (
+                <div className="mb-3 relative animate-[fadeIn_0.3s_ease-out]">
+                    <div className="bg-black/90 border border-purple-500/30 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-[0_0_20px_rgba(168,85,247,0.2)] whitespace-nowrap">
+                        Need Help?
+                    </div>
+                    <div className="absolute -bottom-1 right-4 w-2 h-2 bg-black/90 border-r border-b border-purple-500/30 rotate-45"></div>
+                </div>
+            )}
+
             {/* The Floating Bubble Node */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className={`w-16 h-16 rounded-full flex items-center justify-center transition-all duration-500 group relative ${isOpen ? 'bg-black border border-white/10 scale-90' : 'bg-black border-2 border-purple-500/50 shadow-[0_0_30px_rgba(168,85,247,0.3)] hover:scale-110 hover:shadow-[0_0_50px_rgba(168,85,247,0.5)]'
-                    }`}
+                className={`w-16 h-16 rounded-full flex items-center justify-center transition-all duration-500 group relative overflow-hidden ${isOpen ? 'bg-black border border-white/10 scale-90' : 'border-2 border-purple-500/60 shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_35px_rgba(168,85,247,0.6)] hover:scale-110'}`}
             >
-                {/* Background pulse effect when closed */}
-                {!isOpen && (
-                    <div className="absolute inset-0 rounded-full bg-purple-500/20 blur-md animate-pulse"></div>
-                )}
-
                 {/* Logo / Close icon */}
-                <div className="relative z-10 w-8 h-8 flex items-center justify-center">
+                <div className="relative z-10 w-full h-full flex items-center justify-center">
                     {isOpen ? (
                         <svg className="w-6 h-6 text-slate-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"></path></svg>
                     ) : (
-                        <img src="/favicon_io/favicon-32x32.png" alt="Simple AI" className="w-10 h-10 rounded-full bg-black p-1 drop-shadow-[0_0_10px_rgba(0,255,255,0.6)]" />
+                        <img src="/favicon_io/android-chrome-192x192.png" alt="Simple AI" className="w-full h-full object-cover rounded-full" />
                     )}
                 </div>
             </button>
