@@ -30,10 +30,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
                     {/* ── STATIC BLACK HEADER BAR ── */}
                     <header className="w-full px-6 md:px-10 py-4 flex justify-between items-center z-50 bg-black border-b border-white/5 shrink-0">
-                        <div className="flex items-center gap-3">
+                        <Link href="/" className="flex items-center gap-3 cursor-pointer">
                             <img src="/favicon_io/favicon-32x32.png" alt="Logo" className="w-7 h-7" />
-                            <Link href="/" className="font-bold tracking-tight text-white text-sm md:text-base">Simple As That</Link>
-                        </div>
+                            <span className="font-bold tracking-tight text-white text-sm md:text-base">Simple As That</span>
+                        </Link>
                         <Link href="/auth/login" className="text-xs font-bold uppercase tracking-widest text-purple-300/60 hover:text-white transition-colors">
                             Login
                         </Link>
