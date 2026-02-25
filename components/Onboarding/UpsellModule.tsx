@@ -47,10 +47,10 @@ export default function UpsellModule({
         <div className={`w-full max-w-4xl mx-auto py-12 px-4 transition-colors duration-1000 ${isDark ? 'text-white' : 'text-slate-900'}`}>
             <div className="text-center mb-12 relative w-full flex flex-col items-center">
                 <h2 className={`text-4xl md:text-5xl font-black tracking-tighter mb-4 ${isDark ? 'drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]' : ''}`}>
-                    Maximize Your Edge.
+                    Add More To Your Website.
                 </h2>
                 <p className={`text-lg font-light tracking-wide max-w-2xl text-center ${isDark ? 'text-cyan-100/60' : 'text-slate-500'}`}>
-                    Select premium modules to hyper-scale your infrastructure deployment.
+                    These optional upgrades take your website to the next level.
                 </p>
             </div>
 
@@ -101,7 +101,7 @@ export default function UpsellModule({
                             </div>
                         </div>
                         <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'} max-w-xl`}>
-                            High-fidelity SVG logo generation injected directly into the core JSON-LD schema for immediate brand authority scaling.
+                            High-quality logo designed to match your brand colors, ready to use on your website and business cards.
                         </p>
                     </div>
 
@@ -158,7 +158,7 @@ export default function UpsellModule({
                             </div>
                         </div>
                         <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'} max-w-xl`}>
-                            Automated live ADA updates & State Data Law patching. Mounts the "Simple-As-That Verified" trust badge to your footer (includes entry in the Global Backlink Client Directory).
+                            Stay compliant with your state's privacy laws — automatically. Includes a verified trust badge for your website footer and a listing in our Business Directory.
                         </p>
                     </div>
 
@@ -198,7 +198,7 @@ export default function UpsellModule({
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
                             <div>
                                 <h3 className={`text-xl font-black tracking-tight ${addons.hosting ? (isDark ? 'text-white' : 'text-slate-900') : (isDark ? 'text-slate-300' : 'text-slate-700')}`}>
-                                    Edge Network Management
+                                    Managed Hosting & Support
                                 </h3>
                             </div>
                             <div className="flex items-center justify-center md:justify-end gap-3">
@@ -209,7 +209,7 @@ export default function UpsellModule({
                             </div>
                         </div>
                         <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'} max-w-xl`}>
-                            Automated SSL renewals, Global CDN routing, daily backups, and sub-100ms TTFB caching utilizing our enterprise Vercel/Cloudflare pipeline.
+                            We keep your website fast, secure, and online 24/7 — including automatic backups, security updates, and lightning-fast loading speeds worldwide.
                         </p>
                     </div>
 

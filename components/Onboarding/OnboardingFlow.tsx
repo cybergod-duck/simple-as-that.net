@@ -131,7 +131,7 @@ export default function OnboardingFlow() {
                         />
                     </div>
                     <span className={`font-bold tracking-tight text-sm transition-colors ${isDark ? 'text-cyan-400 drop-shadow-[0_0_8px_rgba(0,255,255,0.4)]' : 'text-slate-900 drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)]'
-                        }`}>System Initialize</span>
+                        }`}>Simple As That</span>
                 </div>
             </div>
 
@@ -143,10 +143,10 @@ export default function OnboardingFlow() {
                     <div className="animate-fade-in space-y-12">
                         <div className="text-center md:text-left">
                             <h2 className={`text-4xl md:text-5xl font-black tracking-tighter mb-4 transition-colors ${isDark ? 'text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]' : 'text-slate-900'
-                                }`}>Define entity.</h2>
+                                }`}>Let's build your website.</h2>
                             <p className={`text-lg font-light tracking-wide transition-colors ${isDark ? 'text-cyan-100/60' : 'text-slate-500'
                                 }`}>
-                                Provide baseline vectors. The generative engine will compile the architecture stack based on these parameters.
+                                Tell us a little about your business and we'll handle the rest.
                             </p>
                         </div>
 
@@ -156,7 +156,7 @@ export default function OnboardingFlow() {
                                 <label className={`block text-xs font-bold uppercase tracking-widest mb-3 transition-colors ${formData.name
                                     ? (isDark ? 'text-cyan-400 drop-shadow-[0_0_8px_rgba(0,255,255,0.4)]' : 'text-cyan-600')
                                     : 'text-slate-500'
-                                    }`}>Entity / Business Name</label>
+                                    }`}>Your Business Name</label>
                                 <input
                                     required
                                     type="text"
@@ -174,7 +174,7 @@ export default function OnboardingFlow() {
                                 <label className={`block text-xs font-bold uppercase tracking-widest mb-3 transition-colors ${formData.industry
                                     ? (isDark ? 'text-green-400 drop-shadow-[0_0_8px_rgba(0,255,0,0.4)]' : 'text-green-600')
                                     : 'text-slate-500'
-                                    }`}>Primary Vector (Industry)</label>
+                                    }`}>What Industry Are You In?</label>
                                 <input
                                     required
                                     type="text"
@@ -196,7 +196,7 @@ export default function OnboardingFlow() {
                                 <label className={`block text-xs font-bold uppercase tracking-widest mb-3 transition-colors ${formData.goals
                                     ? (isDark ? 'text-pink-400 drop-shadow-[0_0_8px_rgba(255,0,255,0.4)]' : 'text-pink-600')
                                     : 'text-slate-500'
-                                    }`}>Target Objective</label>
+                                    }`}>What's Your Main Goal?</label>
                                 <select
                                     required
                                     value={formData.goals}
@@ -207,9 +207,9 @@ export default function OnboardingFlow() {
                                         }`}
                                 >
                                     <option value="" disabled hidden className="text-slate-500">Select conversion path...</option>
-                                    <option value="leads">Maximize Inbound Pipeline (Leads)</option>
-                                    <option value="sales">Orchestrate e-Commerce (Sales)</option>
-                                    <option value="portfolio">Establish Market Authority (Trust)</option>
+                                    <option value="leads">Get More Customers (Leads)</option>
+                                    <option value="sales">Sell Products Online (Sales)</option>
+                                    <option value="portfolio">Build Trust & Credibility (Portfolio)</option>
                                 </select>
                             </div>
 
@@ -222,7 +222,7 @@ export default function OnboardingFlow() {
                                         }`}></div>
                                     <span className={`relative z-10 transition-colors ${isDark ? 'text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]' : 'text-slate-900 drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)]'
                                         }`}>
-                                        Compile Framework
+                                        Get Started
                                     </span>
                                 </button>
                             </div>
@@ -245,10 +245,10 @@ export default function OnboardingFlow() {
                         </div>
                         <div className="space-y-2">
                             <h3 className={`text-2xl font-bold tracking-tight transition-colors ${isDark ? 'text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]' : 'text-slate-900'
-                                }`}>Analyzing Sector Data</h3>
+                                }`}>Building Your Preview</h3>
                             <p className={`font-mono text-xs tracking-widest uppercase transition-colors ${isDark ? 'text-cyan-400 drop-shadow-[0_0_5px_rgba(0,255,255,0.4)]' : 'text-cyan-600'
                                 }`}>
-                                Compiling {formData.industry} topography...
+                                Preparing your {formData.industry} website options...
                             </p>
                         </div>
                     </div>
@@ -280,10 +280,10 @@ export default function OnboardingFlow() {
                     <div className="animate-fade-in space-y-12 w-full max-w-3xl mx-auto">
                         <div className="text-center md:text-left">
                             <h2 className={`text-4xl font-black tracking-tighter mb-4 transition-colors ${isDark ? 'text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]' : 'text-slate-900'
-                                }`}>Network Address.</h2>
+                                }`}>Pick Your Domain.</h2>
                             <p className={`text-lg font-light tracking-wide transition-colors ${isDark ? 'text-cyan-100/60' : 'text-slate-500'
                                 }`}>
-                                Secure a verified domain node to push to the edge network.
+                                Every great website starts with a great web address.
                             </p>
                         </div>
 
@@ -292,7 +292,7 @@ export default function OnboardingFlow() {
                                 <div className={`w-12 h-12 border-4 border-t-transparent rounded-full animate-spin transition-colors ${isDark ? 'border-cyan-400 drop-shadow-[0_0_10px_rgba(0,255,255,0.5)]' : 'border-cyan-500'
                                     }`}></div>
                                 <span className={`font-mono text-xs tracking-widest uppercase transition-colors ${isDark ? 'text-cyan-400 drop-shadow-[0_0_5px_rgba(0,255,255,0.4)]' : 'text-cyan-600'
-                                    }`}>Querying Registrars...</span>
+                                    }`}>Checking availability...</span>
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
@@ -301,8 +301,8 @@ export default function OnboardingFlow() {
                                     ? 'bg-black/50 border-cyan-500/20 hover:border-cyan-400/50 hover:shadow-[0_0_30px_rgba(0,255,255,0.1)]'
                                     : 'bg-white/80 border-cyan-500/20 hover:border-cyan-500 hover:shadow-[0_8px_30px_rgba(0,255,255,0.15)] shadow-sm'
                                     }`}>
-                                    <h3 className={`text-xl font-bold mb-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>Auto-Provisioning</h3>
-                                    <p className="text-sm mb-6 text-slate-500">Via our API backing layer. Zero DNS config required.</p>
+                                    <h3 className={`text-xl font-bold mb-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>We'll Set It Up For You</h3>
+                                    <p className="text-sm mb-6 text-slate-500">Pick a domain below and we handle everything. No tech skills needed.</p>
 
                                     <div className="space-y-3">
                                         {availableDomains.map((domain, i) => (
@@ -331,8 +331,8 @@ export default function OnboardingFlow() {
                                         ? 'bg-black/50 border-orange-500/20 hover:border-orange-500/50 hover:shadow-[0_0_30px_rgba(255,165,0,0.1)]'
                                         : 'bg-white/80 border-orange-400/30 hover:border-orange-500 hover:shadow-[0_8px_30px_rgba(255,165,0,0.15)] shadow-sm'
                                         }`}>
-                                        <h3 className={`text-lg font-bold mb-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>Cloudflare Pipeline</h3>
-                                        <p className="text-xs mb-6 text-slate-500">Handoff to Cloudflare registrar for at-cost domains.</p>
+                                        <h3 className={`text-lg font-bold mb-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>Buy Through Cloudflare</h3>
+                                        <p className="text-xs mb-6 text-slate-500">Purchase your domain directly at the lowest price.</p>
                                         <button onClick={() => handleDomainSelect('cloudflare-pending')} className={`w-full py-3 border rounded-xl font-bold text-sm transition-colors ${isDark
                                             ? 'border-orange-500/50 text-orange-400 hover:bg-orange-500/10 hover:shadow-[0_0_15px_rgba(255,165,0,0.2)]'
                                             : 'border-orange-400 text-orange-600 hover:bg-orange-50 shadow-sm'
@@ -343,8 +343,8 @@ export default function OnboardingFlow() {
                                         ? 'bg-black/50 border-white/10 hover:border-white/30'
                                         : 'bg-white/80 border-slate-200 hover:border-slate-400 shadow-sm'
                                         }`}>
-                                        <h3 className={`text-lg font-bold mb-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>Bring Your Own</h3>
-                                        <p className="text-xs mb-4 text-slate-500">Map via Domain Connect protocol.</p>
+                                        <h3 className={`text-lg font-bold mb-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>I Already Have a Domain</h3>
+                                        <p className="text-xs mb-4 text-slate-500">Connect the domain you already own.</p>
                                         <div className="flex gap-2">
                                             <input type="text" id="custom-domain-input" placeholder="yourdomain.com" className={`w-full px-4 py-3 rounded-xl border focus:outline-none transition-colors ${isDark
                                                 ? 'focus:ring-1 focus:ring-white/50 bg-black/60 border-white/10 text-white'
@@ -375,9 +375,9 @@ export default function OnboardingFlow() {
                             <svg className={`w-10 h-10 ${isDark ? 'text-green-400 drop-shadow-[0_0_8px_rgba(0,255,0,0.6)]' : 'text-green-500 drop-shadow-[0_2px_4px_rgba(0,255,0,0.3)]'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"></path></svg>
                         </div>
                         <div className="space-y-4">
-                            <h2 className={`text-4xl md:text-5xl font-black tracking-tighter ${isDark ? 'text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]' : 'text-slate-900'}`}>Architecture Locked.</h2>
+                            <h2 className={`text-4xl md:text-5xl font-black tracking-tighter ${isDark ? 'text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]' : 'text-slate-900'}`}>You're All Set!</h2>
                             <p className={`text-lg font-light tracking-wide ${isDark ? 'text-green-100/60' : 'text-slate-500'}`}>
-                                Deploying framework to the edge network. Initiating hyperspace jump...
+                                We're setting up your website now. This won't take long...
                             </p>
                         </div>
                         <div className={`w-full max-w-sm mx-auto h-2 rounded-full overflow-hidden border ${isDark ? 'bg-white/5 border-white/10' : 'bg-slate-100 border-slate-200 shadow-inner'}`}>

@@ -12,7 +12,7 @@ export default function FluidAI() {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
-        { role: 'ai', content: 'Connection established. How can I assist with your infrastructure today?' }
+        { role: 'ai', content: 'Hey there! 👋 I\'m Simple AI. How can I help you with your website today?' }
     ]);
     const [input, setInput] = useState('');
     const [isThinking, setIsThinking] = useState(false);
@@ -27,7 +27,7 @@ export default function FluidAI() {
             const industry = pathname.split('/').pop()?.replace('-', ' ');
             setMessages(prev => [...prev, {
                 role: 'ai',
-                content: `I am currently optimizing this layout for the ${industry} space. Do you need me to adjust the data payload?`
+                content: `I see you\'re checking out our ${industry} websites! Have any questions about what we can build for you?`
             }]);
         }
     }, [pathname]);
@@ -63,7 +63,7 @@ export default function FluidAI() {
             setMessages(prev => [...prev, { role: 'ai', content: data.reply }]);
         } catch (error) {
             console.error('AI Error:', error);
-            setMessages(prev => [...prev, { role: 'ai', content: 'Neural connection interrupted. Please try again.' }]);
+            setMessages(prev => [...prev, { role: 'ai', content: 'Hmm, something went wrong on my end. Could you try asking again?' }]);
         } finally {
             setIsThinking(false);
         }
@@ -129,7 +129,7 @@ export default function FluidAI() {
                                 value={input}
                                 onChange={(e: any) => setInput(e.target.value)}
                                 onKeyDown={(e: any) => e.key === 'Enter' && handleSend()}
-                                placeholder="Command the architecture..."
+                                placeholder="Ask me anything..."
                                 className="w-full bg-white/5 border border-white/10 rounded-xl pl-4 pr-12 py-3 text-sm text-white focus:outline-none focus:border-cyan-500/50 focus:bg-white/10 transition-colors placeholder:text-slate-600"
                             />
                             <button

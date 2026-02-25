@@ -82,11 +82,11 @@ export default function TemplateRecommendations({ industry, onComplete }: { indu
 
                 <h2 className={`text-4xl md:text-5xl font-black tracking-tighter mb-4 transition-colors ${isDark ? 'text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]' : 'text-slate-900'
                     }`}>
-                    Architecture Selection
+                    Choose Your Website Package
                 </h2>
                 <p className={`text-lg font-light tracking-wide max-w-2xl text-center transition-colors ${isDark ? 'text-purple-200/60' : 'text-slate-500'
                     }`}>
-                    Optimized for {industry || 'Your Space'}. Select your foundational build.
+                    Optimized for {industry || 'Your Business'}. Pick the plan that fits your needs.
                 </p>
             </div>
 
@@ -181,7 +181,7 @@ export default function TemplateRecommendations({ industry, onComplete }: { indu
                                     : 'bg-white text-purple-600 border-purple-400 group-hover:border-cyan-400 group-hover:text-cyan-700 shadow-[0_4px_10px_rgba(168,85,247,0.2)]')
                                 }`}
                             >
-                                {selectedPlan === tier.id ? 'Selected Baseline' : 'Select'}
+                                {selectedPlan === tier.id ? 'Selected ✓' : 'Choose This Plan'}
                             </div>
                         </div>
                     ))}
@@ -193,7 +193,7 @@ export default function TemplateRecommendations({ industry, onComplete }: { indu
                 }`}>
                 <div className={`text-xs font-bold tracking-widest uppercase transition-colors ${isDark ? 'text-purple-300' : 'text-slate-500'
                     }`}>
-                    Step 3: Framework Inject
+                    Step 3: Choose Your Plan
                 </div>
                 <button
                     onClick={handleNext}
@@ -213,7 +213,7 @@ export default function TemplateRecommendations({ industry, onComplete }: { indu
                         }`}></div>
                     <span className={`relative z-10 transition-all ${selectedPlan && isDark ? 'drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]' : ''
                         }`}>
-                        Provision Framework
+                        Continue
                     </span>
                 </button>
             </div>
