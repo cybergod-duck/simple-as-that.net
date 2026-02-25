@@ -188,7 +188,7 @@ export default function OnboardingFlow() {
                                     placeholder="e.g. Roofers"
                                 />
                                 <datalist id="industry-list">
-                                    {industries.slice(0, 50).map((ind, i) => <option key={i} value={ind} />)}
+                                    {industries.map((ind, i) => <option key={i} value={ind} />)}
                                 </datalist>
                             </div>
 
