@@ -100,10 +100,10 @@ export default function OnboardingFlow() {
     const dynamicGradient = getIndustryGradient(formData.industry);
 
     return (
-        <div className={`min-h-screen relative flex justify-center items-center py-20 px-4 sm:px-6 lg:px-8 font-sans overflow-hidden transition-colors duration-1000 ${isDark ? 'bg-black text-slate-200' : 'bg-[#FAFAFA] text-slate-900'
+        <div className={`min-h-screen relative flex justify-center items-center py-20 px-4 sm:px-6 lg:px-8 font-sans overflow-hidden transition-colors duration-1000 ${isDark ? 'bg-[#0d0521] text-slate-200' : 'bg-[#FAFAFA] text-slate-900'
             }`}>
             {/* Background Base */}
-            <div className={`absolute inset-0 z-0 transition-colors duration-1000 ${isDark ? 'bg-black' : 'bg-[#FAFAFA]'}`}></div>
+            <div className={`absolute inset-0 z-0 transition-colors duration-1000 ${isDark ? 'bg-[#0d0521]' : 'bg-[#FAFAFA]'}`}></div>
 
             {/* Neon Glowing Ambient Gradients */}
             <div className={`absolute inset-0 bg-gradient-to-br ${dynamicGradient} blur-[120px] transition-all duration-1000 z-0 ${isDark ? 'mix-blend-screen opacity-100' : 'mix-blend-multiply opacity-50'
@@ -111,12 +111,12 @@ export default function OnboardingFlow() {
 
             {/* Holographic grid overlay */}
             <div className={`absolute inset-0 bg-[size:40px_40px] pointer-events-none z-0 ${isDark
-                ? 'bg-[linear-gradient(rgba(0,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,255,0.02)_1px,transparent_1px)]'
-                : 'bg-[linear-gradient(rgba(0,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,255,0.05)_1px,transparent_1px)]'
+                ? 'bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)]'
+                : 'bg-[linear-gradient(rgba(168,85,247,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.05)_1px,transparent_1px)]'
                 }`}></div>
 
             {/* Header / Native App Bar */}
-            <div className={`absolute top-0 w-full px-8 py-6 flex justify-between items-center z-50 border-b backdrop-blur-md transition-colors ${isDark ? 'border-white/5 bg-black/50' : 'border-slate-200 bg-white/50'
+            <div className={`absolute top-0 w-full px-8 py-6 flex justify-between items-center z-50 border-b backdrop-blur-md transition-colors ${isDark ? 'border-purple-500/20 bg-[#0d0521]/80' : 'border-slate-200 bg-white/50'
                 }`}>
                 <div className="flex items-center gap-4">
                     {/* Glowing Wireframe Globe Icon */}
@@ -130,7 +130,7 @@ export default function OnboardingFlow() {
                                 }`}
                         />
                     </div>
-                    <span className={`font-bold tracking-tight text-sm transition-colors ${isDark ? 'text-cyan-400 drop-shadow-[0_0_8px_rgba(0,255,255,0.4)]' : 'text-slate-900 drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)]'
+                    <span className={`font-bold tracking-tight text-sm transition-colors ${isDark ? 'text-purple-300 drop-shadow-[0_0_8px_rgba(168,85,247,0.4)]' : 'text-slate-900 drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)]'
                         }`}>Simple As That</span>
                 </div>
             </div>
@@ -154,7 +154,7 @@ export default function OnboardingFlow() {
                             {/* Seamless Input Fields */}
                             <div className="group relative">
                                 <label className={`block text-xs font-bold uppercase tracking-widest mb-3 transition-colors ${formData.name
-                                    ? (isDark ? 'text-cyan-400 drop-shadow-[0_0_8px_rgba(0,255,255,0.4)]' : 'text-cyan-600')
+                                    ? (isDark ? 'text-cyan-400 drop-shadow-[0_0_8px_rgba(0,255,255,0.4)]' : 'text-purple-600')
                                     : 'text-slate-500'
                                     }`}>Your Business Name</label>
                                 <input
@@ -163,8 +163,8 @@ export default function OnboardingFlow() {
                                     value={formData.name}
                                     onChange={(e: any) => setFormData({ ...formData, name: e.target.value })}
                                     className={`w-full bg-transparent border-b-2 py-4 text-2xl font-bold focus:outline-none transition-colors rounded-none ${isDark
-                                        ? 'border-slate-800 focus:border-cyan-400 text-white placeholder:text-slate-700'
-                                        : 'border-slate-200 focus:border-cyan-500 text-slate-900 placeholder:text-slate-300'
+                                        ? 'border-purple-800 focus:border-cyan-400 text-white placeholder:text-slate-700'
+                                        : 'border-purple-200 focus:border-purple-500 text-slate-900 placeholder:text-slate-300'
                                         }`}
                                     placeholder="Acme Interdimensional"
                                 />
@@ -172,7 +172,7 @@ export default function OnboardingFlow() {
 
                             <div className="group relative">
                                 <label className={`block text-xs font-bold uppercase tracking-widest mb-3 transition-colors ${formData.industry
-                                    ? (isDark ? 'text-green-400 drop-shadow-[0_0_8px_rgba(0,255,0,0.4)]' : 'text-green-600')
+                                    ? (isDark ? 'text-purple-300 drop-shadow-[0_0_8px_rgba(168,85,247,0.4)]' : 'text-purple-600')
                                     : 'text-slate-500'
                                     }`}>What Industry Are You In?</label>
                                 <input
@@ -182,8 +182,8 @@ export default function OnboardingFlow() {
                                     value={formData.industry}
                                     onChange={(e: any) => setFormData({ ...formData, industry: e.target.value })}
                                     className={`w-full bg-transparent border-b-2 py-4 text-2xl font-bold focus:outline-none transition-colors rounded-none ${isDark
-                                        ? 'border-slate-800 focus:border-green-400 text-white placeholder:text-slate-700'
-                                        : 'border-slate-200 focus:border-green-500 text-slate-900 placeholder:text-slate-300'
+                                        ? 'border-purple-800 focus:border-purple-400 text-white placeholder:text-slate-700'
+                                        : 'border-purple-200 focus:border-purple-500 text-slate-900 placeholder:text-slate-300'
                                         }`}
                                     placeholder="e.g. Roofers"
                                 />
@@ -194,7 +194,7 @@ export default function OnboardingFlow() {
 
                             <div className="group relative">
                                 <label className={`block text-xs font-bold uppercase tracking-widest mb-3 transition-colors ${formData.goals
-                                    ? (isDark ? 'text-pink-400 drop-shadow-[0_0_8px_rgba(255,0,255,0.4)]' : 'text-pink-600')
+                                    ? (isDark ? 'text-cyan-400 drop-shadow-[0_0_8px_rgba(0,255,255,0.4)]' : 'text-purple-600')
                                     : 'text-slate-500'
                                     }`}>What's Your Main Goal?</label>
                                 <select
@@ -202,8 +202,8 @@ export default function OnboardingFlow() {
                                     value={formData.goals}
                                     onChange={(e: any) => setFormData({ ...formData, goals: e.target.value })}
                                     className={`w-full bg-transparent border-b-2 py-4 text-xl font-bold focus:outline-none transition-colors cursor-pointer appearance-none rounded-none ${isDark
-                                        ? 'border-slate-800 focus:border-pink-400 text-white [&>option]:bg-[#09090B]'
-                                        : 'border-slate-200 focus:border-pink-500 text-slate-900 [&>option]:bg-white'
+                                        ? 'border-purple-800 focus:border-cyan-400 text-white [&>option]:bg-[#0d0521]'
+                                        : 'border-purple-200 focus:border-purple-500 text-slate-900 [&>option]:bg-white'
                                         }`}
                                 >
                                     <option value="" disabled hidden className="text-slate-500">Select conversion path...</option>
@@ -215,10 +215,10 @@ export default function OnboardingFlow() {
 
                             <div className="pt-8">
                                 <button type="submit" className={`group relative w-full md:w-auto px-12 py-5 rounded-2xl font-bold tracking-widest uppercase transition-all duration-500 ease-out overflow-hidden border ${isDark
-                                    ? 'bg-black border-white/10 hover:border-cyan-500/50'
-                                    : 'bg-white border-slate-200 hover:border-cyan-300 shadow-[0_4px_20px_rgba(0,0,0,0.05)]'
+                                    ? 'bg-purple-900/80 border-purple-500/50 hover:border-cyan-400 shadow-[0_0_20px_rgba(168,85,247,0.3)]'
+                                    : 'bg-purple-600 border-purple-500 hover:border-cyan-300 shadow-[0_4px_20px_rgba(168,85,247,0.2)]'
                                     }`}>
-                                    <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity ${isDark ? 'bg-gradient-to-r from-cyan-500/20 to-green-500/20' : 'bg-gradient-to-r from-cyan-500/10 to-green-500/10'
+                                    <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity ${isDark ? 'bg-gradient-to-r from-purple-500/20 to-cyan-500/20' : 'bg-gradient-to-r from-purple-500/10 to-cyan-500/10'
                                         }`}></div>
                                     <span className={`relative z-10 transition-colors ${isDark ? 'text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]' : 'text-slate-900 drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)]'
                                         }`}>
@@ -234,11 +234,11 @@ export default function OnboardingFlow() {
                 {step === 'thinking' && (
                     <div className="animate-fade-in flex flex-col items-center justify-center h-full text-center space-y-8">
                         <div className="relative flex items-center justify-center w-24 h-24">
-                            <div className={`absolute inset-0 rounded-full border-2 border-t-transparent animate-spin ${isDark ? 'border-cyan-500/50 shadow-[0_0_15px_rgba(0,255,255,0.3)]' : 'border-cyan-500 shadow-[0_2px_10px_rgba(0,255,255,0.2)]'
+                            <div className={`absolute inset-0 rounded-full border-2 border-t-transparent animate-spin ${isDark ? 'border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.3)]' : 'border-purple-500 shadow-[0_2px_10px_rgba(168,85,247,0.2)]'
                                 }`}></div>
-                            <div className={`absolute inset-2 rounded-full border-2 border-b-transparent animate-[spin_1.5s_linear_infinite_reverse] ${isDark ? 'border-green-500/50 shadow-[0_0_15px_rgba(0,255,0,0.3)]' : 'border-green-500 shadow-[0_2px_10px_rgba(0,255,0,0.2)]'
+                            <div className={`absolute inset-2 rounded-full border-2 border-b-transparent animate-[spin_1.5s_linear_infinite_reverse] ${isDark ? 'border-cyan-500/50 shadow-[0_0_15px_rgba(0,255,255,0.3)]' : 'border-cyan-500 shadow-[0_2px_10px_rgba(0,255,255,0.2)]'
                                 }`}></div>
-                            <div className={`absolute inset-4 rounded-full border-2 border-l-transparent animate-[spin_2s_linear_infinite] ${isDark ? 'border-pink-500/50 shadow-[0_0_15px_rgba(255,0,255,0.3)]' : 'border-pink-500 shadow-[0_2px_10px_rgba(255,0,255,0.2)]'
+                            <div className={`absolute inset-4 rounded-full border-2 border-l-transparent animate-[spin_2s_linear_infinite] ${isDark ? 'border-purple-400/50 shadow-[0_0_15px_rgba(168,85,247,0.3)]' : 'border-purple-400 shadow-[0_2px_10px_rgba(168,85,247,0.2)]'
                                 }`}></div>
                             <div className={`w-2 h-2 rounded-full animate-pulse transition-all ${isDark ? 'bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)]' : 'bg-slate-900 shadow-[0_2px_4px_rgba(0,0,0,0.2)]'
                                 }`}></div>
@@ -369,19 +369,19 @@ export default function OnboardingFlow() {
                 {step === 'complete' && (
                     <div className="animate-fade-in text-center space-y-8">
                         <div className={`w-24 h-24 rounded-full mx-auto flex items-center justify-center animate-[pulse_2s_ease-in-out_infinite] border ${isDark
-                            ? 'bg-green-500/10 border-green-500/30 shadow-[0_0_30px_rgba(0,255,0,0.2)]'
-                            : 'bg-green-50 border-green-200 shadow-[0_8px_30px_rgba(0,255,0,0.15)]'
+                            ? 'bg-purple-500/10 border-purple-500/30 shadow-[0_0_30px_rgba(168,85,247,0.2)]'
+                            : 'bg-purple-50 border-purple-200 shadow-[0_8px_30px_rgba(168,85,247,0.15)]'
                             }`}>
-                            <svg className={`w-10 h-10 ${isDark ? 'text-green-400 drop-shadow-[0_0_8px_rgba(0,255,0,0.6)]' : 'text-green-500 drop-shadow-[0_2px_4px_rgba(0,255,0,0.3)]'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                            <svg className={`w-10 h-10 ${isDark ? 'text-cyan-400 drop-shadow-[0_0_8px_rgba(0,255,255,0.6)]' : 'text-purple-500 drop-shadow-[0_2px_4px_rgba(168,85,247,0.3)]'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"></path></svg>
                         </div>
                         <div className="space-y-4">
                             <h2 className={`text-4xl md:text-5xl font-black tracking-tighter ${isDark ? 'text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]' : 'text-slate-900'}`}>You're All Set!</h2>
-                            <p className={`text-lg font-light tracking-wide ${isDark ? 'text-green-100/60' : 'text-slate-500'}`}>
+                            <p className={`text-lg font-light tracking-wide ${isDark ? 'text-purple-200/60' : 'text-slate-500'}`}>
                                 We're setting up your website now. This won't take long...
                             </p>
                         </div>
                         <div className={`w-full max-w-sm mx-auto h-2 rounded-full overflow-hidden border ${isDark ? 'bg-white/5 border-white/10' : 'bg-slate-100 border-slate-200 shadow-inner'}`}>
-                            <div className={`h-full bg-gradient-to-r from-cyan-400 via-green-400 to-pink-500 rounded-full animate-[progress_2.5s_ease-in-out_infinite] ${isDark ? 'shadow-[0_0_10px_rgba(0,255,0,0.5)]' : ''}`} style={{ width: '80%' }}></div>
+                            <div className={`h-full bg-gradient-to-r from-purple-500 via-cyan-400 to-purple-500 rounded-full animate-[progress_2.5s_ease-in-out_infinite] ${isDark ? 'shadow-[0_0_10px_rgba(168,85,247,0.5)]' : ''}`} style={{ width: '80%' }}></div>
                         </div>
                     </div>
                 )}
