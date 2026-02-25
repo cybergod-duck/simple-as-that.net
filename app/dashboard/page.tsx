@@ -13,6 +13,46 @@ interface UserProfile {
     addons: string[];
 }
 
+function SimpleAIPlusBanner({ industry }: { industry: string }) {
+    const [status, setStatus] = useState(0);
+    const statuses = [
+        { label: 'Optimizing Performance', color: 'text-cyan-400', dot: 'bg-cyan-400 shadow-[0_0_10px_#00ffff]' },
+        { label: 'Awaiting Instructions', color: 'text-purple-300', dot: 'bg-purple-400 shadow-[0_0_10px_#a855f7]' },
+    ];
+
+    useEffect(() => {
+        const interval = setInterval(() => setStatus(s => (s + 1) % statuses.length), 4000);
+        return () => clearInterval(interval);
+    }, []);
+
+    const current = statuses[status];
+
+    return (
+        <div className="mb-8 bg-purple-950/40 backdrop-blur-xl border border-cyan-500/20 rounded-2xl p-5 shadow-[0_0_30px_rgba(0,255,255,0.08)] flex items-center justify-between">
+            <div className="flex items-center gap-4">
+                <div className="relative">
+                    <div className={`w-3 h-3 rounded-full animate-pulse ${current.dot}`}></div>
+                    <div className={`absolute inset-0 w-3 h-3 rounded-full animate-ping opacity-30 ${current.dot}`}></div>
+                </div>
+                <div>
+                    <h3 className="text-sm font-black tracking-tight text-white flex items-center gap-2">
+                        Simple AI+ Concierge
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-full border border-cyan-500/30">Active</span>
+                    </h3>
+                    <p className="text-xs text-purple-300/50 mt-0.5">
+                        Industry-specific AI strategist trained on <strong className="text-purple-200/70">{industry}</strong>
+                    </p>
+                </div>
+            </div>
+            <div className="text-right">
+                <p className={`text-sm font-bold transition-colors duration-500 ${current.color}`}>
+                    {current.label}
+                </p>
+                <p className="text-[10px] text-purple-300/40 uppercase tracking-widest font-bold">Co-Pilot Status</p>
+            </div>
+        </div>
+    );
+}
 export default function DashboardPage() {
     const supabase = createClient();
     const router = useRouter();
@@ -90,6 +130,9 @@ export default function DashboardPage() {
                     </h2>
                     <p className="text-purple-200/50">Your {user?.industry} website is live and performing. Here's your overview.</p>
                 </div>
+
+                {/* Simple AI+ Status Banner */}
+                <SimpleAIPlusBanner industry={user?.industry || 'General'} />
 
                 {/* Status Cards Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">

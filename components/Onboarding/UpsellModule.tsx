@@ -198,10 +198,10 @@ export default function UpsellModule({
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
                             <div>
                                 <h3 className={`text-xl font-black tracking-tight ${addons.hosting ? (isDark ? 'text-white' : 'text-slate-900') : (isDark ? 'text-slate-300' : 'text-slate-700')}`}>
-                                    Simple AI Plus
+                                    Simple AI+ Concierge
                                 </h3>
                                 <span className={`inline-block mt-1 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${isDark ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/50' : 'bg-cyan-50 text-cyan-700 border border-cyan-200'}`}>
-                                    Required · Hosting + AI Assistant
+                                    Infrastructure Co-Pilot · $29/mo
                                 </span>
                             </div>
                             <div className="flex items-center justify-center md:justify-end gap-3">
@@ -212,7 +212,7 @@ export default function UpsellModule({
                             </div>
                         </div>
                         <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'} max-w-xl`}>
-                            Your website stays fast, secure, and online 24/7. Plus, get access to <strong className={isDark ? 'text-cyan-400' : 'text-cyan-600'}>Simple AI Plus</strong> — a smarter assistant that helps you customize your site, set up Google login, manage updates, and troubleshoot anything.
+                            <strong className={isDark ? 'text-cyan-400' : 'text-cyan-600'}>Simple AI+ Infrastructure Co-Pilot:</strong> Proactive performance integrity and a 24/7 industry-specific AI strategist trained on your business niche. We handle the technical heavy lifting — you focus on the business.
                         </p>
                     </div>
 

@@ -59,7 +59,7 @@ const TIERS = [
             'Blog / news section',
             'Google AI Overview optimization',
             'Competitor analysis report',
-            'Priority support',
+            'Simple AI+ Concierge included',
         ],
         preview: '/templates/contractor.png',
     },
@@ -74,7 +74,7 @@ const TIERS = [
             'Custom logo designed for your brand',
             'Full SEO + Google Ads setup guide',
             'State compliance pack included',
-            'Dedicated account manager',
+            'Simple AI+ Concierge — your 24/7 AI strategist',
         ],
         preview: '/templates/contractor.png',
     }
