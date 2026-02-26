@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { getIndustryData } from '../utils/csvParser';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://simple-as-that.org';
+    const baseUrl = 'https://simple-as-that.net';
     const industries = getIndustryData();
 
     const dynamicRoutes = industries.map((ind) => ({
@@ -16,7 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         {
             url: baseUrl,
             lastModified: new Date(),
-            changeFrequency: 'yearly',
+            changeFrequency: 'weekly',
             priority: 1,
         },
         {
@@ -30,6 +30,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
             lastModified: new Date(),
             changeFrequency: 'monthly',
             priority: 0.7,
+        },
+        {
+            url: `${baseUrl}/privacy`,
+            lastModified: new Date(),
+            changeFrequency: 'yearly',
+            priority: 0.3,
         },
         ...dynamicRoutes,
     ];

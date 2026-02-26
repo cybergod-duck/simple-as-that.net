@@ -11,8 +11,31 @@ import Link from 'next/link';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-    title: 'Simple As That | Core Network',
-    description: 'Beautiful, fast websites for small businesses.',
+    title: 'Simple As That | Beautiful Websites for Small Business — Website Design 2026',
+    description: 'We build beautiful, fast websites for small businesses. AI-powered design, instant deployment, starting at $99. Get your business online today.',
+    keywords: ['website design', 'small business website', 'web design 2026', 'affordable website', 'website builder', 'AI website', 'simple as that'],
+    metadataBase: new URL('https://simple-as-that.net'),
+    alternates: {
+        canonical: 'https://simple-as-that.net',
+    },
+    openGraph: {
+        title: 'Simple As That | Beautiful Websites for Small Business',
+        description: 'AI-powered website design for small businesses. Tell us what you need, we build it — starting at $99.',
+        url: 'https://simple-as-that.net',
+        siteName: 'Simple As That',
+        type: 'website',
+        locale: 'en_US',
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Simple As That | Website Design for Small Business',
+        description: 'AI-powered website design starting at $99. Beautiful, fast, deployed today.',
+    },
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 },
+    },
     icons: {
         icon: [
             { url: '/favicon_io/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
