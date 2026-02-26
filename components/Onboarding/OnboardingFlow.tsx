@@ -1,437 +1,584 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useTheme } from 'next-themes';
-import ColorPalettePicker from './ColorPalettePicker';
+import { useState, useEffect, useRef } from 'react';
 import LiveMockup from './LiveMockup';
 
-/* ── Component pricing from STRIPE_PRICE_LIST.md ──────────────── */
-const HERO_OPTIONS = [
-    { id: 'basic', label: 'Simple Hero', desc: 'H1 + Subtitle + CTA — clean and effective', price: 49, tier: 1 },
-    { id: 'split', label: 'Split-Screen Hero', desc: 'Your business image beside a strong headline', price: 89, tier: 2 },
-    { id: 'floating-form', label: 'Dynamic Hero + Lead Form', desc: 'Captures leads right from the hero', price: 129, tier: 3 },
-    { id: 'video', label: 'Video Background Hero', desc: 'High-impact video behind your message', price: 179, tier: 4 },
-    { id: '3d', label: 'Premium 3D Dashboard', desc: 'Highest visual impact — floating mockup', price: 249, tier: 5 },
+/* ═══ 5 TIERS — fixed bundle prices, questions customize within each tier ═══
+   Tier 1 Landing Page  $79  = Basic Hero + 3-Point + Simple Trust + Basic Form + 1 Page
+   Tier 2 Professional  $199 = Split Hero + Icon Grid + Review Slider + Contact Page + 3 Pages
+   Tier 3 Business       $349 = Dynamic Hero + Zig-Zag + Client Success + CRM Form + 3 Pages + AI+
+   Tier 4 Premium        $549 = Video Hero + Hover Cards + Masonry Grid + Calendar + 4 Pages + AI+
+   Tier 5 Enterprise     $849 = 3D Hero + Scroll Anims + Video Trust + Enterprise CRM + Logo + Blog + 6 Pages + AI+
+═══════════════════════════════════════════════════════════════════════════════ */
+
+const TIERS = [
+    {
+        name: 'Landing Page', price: 79, monthly: 0,
+        desc: 'A clean, professional one-page site',
+        includes: ['Basic Hero ($49)', '3-Point Highlights ($39)', 'Text Testimonial ($29)', 'Basic Lead Form ($39)', '1 Page ($49)'],
+        questions: [
+            { id: 't1-hero', q: 'What tone for your headline?', options: ['Professional & corporate', 'Warm & friendly', 'Bold & energetic', 'Minimal & clean'] },
+            { id: 't1-features', q: 'What 3 things make you stand out?', options: ['Speed, Quality, Trust', 'Local, Licensed, Affordable', 'Let me type my own'] },
+            { id: 't1-trust', q: 'Got a customer quote we can feature?', options: ['Yes, I\'ll provide one', 'Use a placeholder for now', 'Skip testimonials'] },
+            { id: 't1-cta', q: 'What should your call-to-action say?', options: ['Get a Free Quote', 'Book Now', 'Call Us Today', 'Learn More'] },
+        ],
+    },
+    {
+        name: 'Professional', price: 199, monthly: 0,
+        desc: 'Multi-page site with upgraded visuals',
+        includes: ['Split-Screen Hero ($89)', 'Icon Grid ($59)', 'Review Slider ($49)', 'Contact Page ($39)', '3 Pages ($147)'],
+        questions: [
+            { id: 't2-hero', q: 'Want a split-screen hero with an industry image?', options: ['Yes — show my industry', 'Photo of my team/work', 'Abstract/geometric pattern'] },
+            { id: 't2-grid', q: 'What 4 services should the icon grid showcase?', options: ['Auto-generate from my industry', 'I\'ll list them', 'Use common ones for now'] },
+            { id: 't2-reviews', q: 'How many reviews for the slider?', options: ['3 rotating reviews', '5+ reviews with ratings', 'Google review embed'] },
+            { id: 't2-pages', q: 'What pages do you want?', options: ['Home, About, Contact', 'Home, Services, Contact', 'Home, About, Services, Contact'] },
+        ],
+    },
+    {
+        name: 'Business', price: 349, monthly: 29,
+        desc: 'Lead generation powerhouse + Simple AI+',
+        includes: ['Dynamic Hero + Form ($129)', 'Zig-Zag Layout ($79)', 'Client Success + Logos ($69)', 'CRM Integration ($79)', '3 Pages ($147)', '★ Simple AI+ ($29/mo)'],
+        questions: [
+            { id: 't3-form', q: 'What should the hero form collect?', options: ['Name + Email + Phone', 'Name + Email + Message', 'Just Email (simple opt-in)', 'Full quote request'] },
+            { id: 't3-layout', q: 'How should the zig-zag sections look?', options: ['Image left, text right (alternating)', 'With icon accents', 'With background color blocks'] },
+            { id: 't3-logos', q: 'Do you have client logos to feature?', options: ['Yes, I\'ll upload them', 'Use placeholder logos', 'Show reviews instead of logos'] },
+            { id: 't3-crm', q: 'Where should leads go?', options: ['My email inbox', 'HubSpot / Salesforce', 'Google Sheets', 'Custom webhook'] },
+        ],
+    },
+    {
+        name: 'Premium', price: 549, monthly: 29,
+        desc: 'High-impact site with booking system',
+        includes: ['Video Background Hero ($179)', 'Hover Cards ($99)', 'Masonry Review Grid ($79)', 'Calendar Booking ($119)', '4 Pages ($196)', '★ Simple AI+ ($29/mo)'],
+        questions: [
+            { id: 't4-video', q: 'What kind of video hero?', options: ['Industry-specific stock video', 'I\'ll provide my own video', 'Animated gradient (no video)'] },
+            { id: 't4-cards', q: 'What should the hover cards show?', options: ['Services with pricing', 'Pain points from my industry', 'Before & after results', 'FAQs'] },
+            { id: 't4-reviews', q: 'For the masonry review grid …', options: ['Real reviews — I\'ll provide', 'Pull from Google', 'Placeholder reviews'] },
+            { id: 't4-booking', q: 'Booking system preference?', options: ['Calendly embed', 'Built-in date picker', 'Link to external booking'] },
+        ],
+    },
+    {
+        name: 'Enterprise', price: 849, monthly: 29,
+        desc: 'Full business suite — everything included',
+        includes: ['3D Dashboard Hero ($249)', 'Scroll Animations ($139)', 'Video Trust + Badges ($99)', 'Enterprise CRM ($179)', 'Logo + Compliance ($129)', 'Blog ($79)', '6 Pages ($294)', '★ Simple AI+ ($29/mo)'],
+        questions: [
+            { id: 't5-hero', q: 'For the 3D floating dashboard …', options: ['Floating mockup of my site', 'Stats/metrics dashboard', 'Product showcase 3D'] },
+            { id: 't5-anims', q: 'Scroll animation style?', options: ['Timeline of services', 'Parallax storytelling', 'Data-driven reveals'] },
+            { id: 't5-trust', q: 'Video testimonials …', options: ['I\'ll provide videos', 'Auto-generate from reviews', 'Placeholder for now'] },
+            { id: 't5-blog', q: 'What kind of blog?', options: ['Industry news & tips', 'Case studies', 'SEO-focused articles', 'All of the above'] },
+        ],
+    },
 ];
 
-const FEATURE_OPTIONS = [
-    { id: '3point', label: '3-Point Highlights', desc: 'Quick "Why Choose Us" section', price: 39 },
-    { id: 'icon-grid', label: '2-Column Icon Grid', desc: '4 value propositions with icons', price: 59 },
-    { id: 'zigzag', label: 'Zig-Zag Layout', desc: 'Alternating text/image rows', price: 79 },
-    { id: 'hover-cards', label: 'Interactive Hover Cards', desc: 'Pain-point mapping from your data', price: 99 },
-    { id: 'scroll-anim', label: 'Scroll Animations + Timeline', desc: 'Complex interactive scrolling', price: 139 },
-];
 
-const TRUST_OPTIONS = [
-    { id: 'text-testimonial', label: 'Text Testimonial', desc: 'Simple quote block', price: 29 },
-    { id: 'review-slider', label: '3-Column Review Slider', desc: 'Rotating customer reviews', price: 49 },
-    { id: 'client-success', label: 'Client Success + Logos', desc: 'Case studies with brand logos', price: 69 },
-    { id: 'masonry-grid', label: 'Masonry Review Grid', desc: '3-column visual review layout', price: 79 },
-    { id: 'video-trust', label: 'Video + Trust Badges', desc: 'Video testimonials with state badges', price: 99 },
-];
 
-const INTEGRATION_OPTIONS = [
-    { id: 'basic-form', label: 'Basic Lead Form', desc: 'Routes to your email', price: 39 },
-    { id: 'crm-form', label: 'CRM / Email Integration', desc: 'Connects to your CRM', price: 79 },
-    { id: 'calendar', label: 'Lead Capture + Calendar', desc: 'Booking system built-in', price: 119 },
-    { id: 'enterprise', label: 'Enterprise Calendly + CRM', desc: 'Full booking + CRM webhook', price: 179 },
-];
-
-type Step = 'info' | 'colors' | 'hero' | 'layout' | 'trust' | 'integration' | 'pages' | 'summary';
+type Phase = 'splash' | 'name' | 'colors' | 'images' | 'questions' | 'preview' | 'checkout';
+type ChatMsg = {
+    role: 'ai' | 'user';
+    text: string;
+    stringOptions?: string[];
+    colorPicker?: boolean;
+    decision?: boolean;
+};
 
 export default function OnboardingFlow() {
-    const { theme } = useTheme();
     const [mounted, setMounted] = useState(false);
-    const [step, setStep] = useState<Step>('info');
+    const [phase, setPhase] = useState<Phase>('splash');
+    const [businessName, setBusinessName] = useState('');
+    const [colors, setColors] = useState<string[]>([]);
+    const [imageDescs, setImageDescs] = useState<string[]>([]);
+    const [imgInput, setImgInput] = useState('');
 
-    const [formData, setFormData] = useState({ name: '', industry: '' });
-    const [palette, setPalette] = useState<string[]>(['#7c3aed', '#06b6d4', '#f43f5e']);
-    const [design, setDesign] = useState({
-        pages: '1', mode: 'dark', shadows: 'subtle', borders: 'rounded', layout: 'stack', images: 'few', hero: 'basic',
-    });
-    const [selectedHero, setSelectedHero] = useState(HERO_OPTIONS[0]);
-    const [selectedFeature, setSelectedFeature] = useState(FEATURE_OPTIONS[0]);
-    const [selectedTrust, setSelectedTrust] = useState(TRUST_OPTIONS[0]);
-    const [selectedIntegration, setSelectedIntegration] = useState(INTEGRATION_OPTIONS[0]);
-    const [pageCount, setPageCount] = useState(1);
+    const [currentTier, setCurrentTier] = useState(0);
+    const [currentQ, setCurrentQ] = useState(0);
+    const [answers, setAnswers] = useState<Record<string, string>>({});
 
-    const [chatMessages, setChatMessages] = useState<{ role: string; text: string }[]>([]);
-    const [chatInput, setChatInput] = useState('');
-    const [showChat, setShowChat] = useState(false);
-    const [domain, setDomain] = useState('');
+    const [chat, setChat] = useState<ChatMsg[]>([]);
+    const [progress, setProgress] = useState(0);
+    const [showPrice, setShowPrice] = useState(false);
+    const [checkoutSlide, setCheckoutSlide] = useState(false);
+    const [selectedDomain, setSelectedDomain] = useState('');
+
+    const chatEndRef = useRef<HTMLDivElement>(null);
+    const nameInputRef = useRef<HTMLInputElement>(null);
+    const wheelRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => { setMounted(true); }, []);
+    useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [chat]);
 
-    // ── Price & Tier Calculation ──
-    const totalPrice = selectedHero.price + selectedFeature.price + selectedTrust.price + selectedIntegration.price + (pageCount * 49);
-    const tier = totalPrice >= 849 ? 'Enterprise' : totalPrice >= 549 ? 'Premium' : totalPrice >= 349 ? 'Business' : totalPrice >= 199 ? 'Professional' : 'Landing Page';
-
-    // Bundled features by tier
-    const includesBlog = tier === 'Enterprise';
-    const includesEcom = tier === 'Premium' || tier === 'Enterprise';
-    const includesLogo = tier === 'Premium' || tier === 'Enterprise';
-    const includesAIPlus = tier === 'Business' || tier === 'Premium' || tier === 'Enterprise';
-
-    const features = [] as string[];
-    if (selectedTrust.id !== 'text-testimonial') features.push('testimonials');
-    if (includesBlog) features.push('blog');
-    if (includesEcom) features.push('ecommerce');
+    const addMsg = (role: 'ai' | 'user', text: string, extra?: Partial<ChatMsg>) => {
+        setChat(prev => [...prev, { role, text, ...extra }]);
+    };
 
     if (!mounted) return null;
-    const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
-    const steps: Step[] = ['info', 'colors', 'hero', 'layout', 'trust', 'integration', 'pages', 'summary'];
-    const stepIndex = steps.indexOf(step);
-    const canNext = step === 'info' ? !!(formData.name && formData.industry) : true;
+    const slug = businessName.toLowerCase().replace(/[^a-z0-9]/g, '') || 'mybusiness';
+    const tier = TIERS[currentTier];
+    const totalQuestions = TIERS.slice(0, currentTier + 1).reduce((s, t) => s + t.questions.length, 0);
+    const answeredCount = Object.keys(answers).length;
 
-    const next = () => { if (stepIndex < steps.length - 1) { setStep(steps[stepIndex + 1]); if (!showChat && stepIndex >= 0) setShowChat(true); } };
-    const back = () => { if (stepIndex > 0) setStep(steps[stepIndex - 1]); };
+    // ── Flow handlers ──
+    const handleBegin = () => {
+        setPhase('name');
+        addMsg('ai', "Hey! I'm Simple AI — I'll build your website in minutes. 🚀");
+        setTimeout(() => addMsg('ai', "First, what's your business name?"), 500);
+        setTimeout(() => nameInputRef.current?.focus(), 600);
+    };
 
-    const sendChat = async () => {
-        if (!chatInput.trim()) return;
-        const msg = chatInput.trim();
-        setChatMessages(prev => [...prev, { role: 'user', text: msg }]);
-        setChatInput('');
-        try {
-            const res = await fetch('/api/concierge', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: msg, context: { businessName: formData.name, industry: formData.industry, tier, totalPrice } }) });
-            const data = await res.json();
-            setChatMessages(prev => [...prev, { role: 'ai', text: data.reply || "I'd love to help customize that for you!" }]);
-        } catch {
-            setChatMessages(prev => [...prev, { role: 'ai', text: "Tell me more about what you're looking for and I'll make it happen." }]);
+    const handleNameSubmit = () => {
+        if (!businessName.trim()) return;
+        addMsg('user', businessName);
+        setPhase('colors');
+        setTimeout(() => {
+            addMsg('ai', `Great name — "${businessName}" ✨ Now pick 4 colors for your brand:`, { colorPicker: true });
+        }, 400);
+    };
+
+    /* ── Color wheel click handler ── */
+    const hslToHex = (h: number, s: number, l: number): string => {
+        const a = s * Math.min(l, 1 - l);
+        const f = (n: number) => {
+            const k = (n + h / 30) % 12;
+            const c = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+            return Math.round(255 * c).toString(16).padStart(2, '0');
+        };
+        return `#${f(0)}${f(8)}${f(4)}`;
+    };
+
+    const handleWheelClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (colors.length >= 4) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        const dist = Math.sqrt(x * x + y * y);
+        const radius = rect.width / 2;
+        if (dist > radius) return;
+        const angle = (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+        const saturation = 0.7 + (dist / radius) * 0.3;
+        const hex = hslToHex(angle, saturation, 0.55);
+        const next = [...colors, hex];
+        setColors(next);
+        if (next.length === 4) {
+            addMsg('user', `Selected 4 colors`);
+            setPhase('images');
+            setTimeout(() => {
+                addMsg('ai', "Those look 🔥 Describe up to 4 images for your site — or type \"skip\".");
+            }, 500);
         }
     };
 
-    const slug = formData.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const handleImageAdd = () => {
+        const desc = imgInput.trim();
+        if (!desc) return;
+        setImgInput('');
+        if (desc.toLowerCase() === 'skip' || desc.toLowerCase() === 'done') {
+            addMsg('user', imageDescs.length > 0 ? `${imageDescs.length} image(s)` : 'Skipping images');
+            startTierQuestions(0);
+            return;
+        }
+        const next = [...imageDescs, desc];
+        setImageDescs(next);
+        addMsg('user', desc);
+        if (next.length >= 4) {
+            startTierQuestions(0);
+        } else {
+            setTimeout(() => addMsg('ai', `Got it! ${4 - next.length} more, or type "done".`), 300);
+        }
+    };
+
+    const startTierQuestions = (tierIdx: number) => {
+        setPhase('questions');
+        setCurrentTier(tierIdx);
+        setCurrentQ(0);
+        setShowPrice(false);
+        const t = TIERS[tierIdx];
+        setTimeout(() => {
+            if (tierIdx === 0) {
+                addMsg('ai', `Let's build your ${t.name} site...`);
+            } else {
+                addMsg('ai', `Upgrading to ${t.name}! Let me ask a few more things...`);
+            }
+            setTimeout(() => {
+                addMsg('ai', t.questions[0].q, { stringOptions: t.questions[0].options });
+            }, 600);
+        }, 400);
+    };
+
+    const handleAnswer = (answer: string) => {
+        const t = TIERS[currentTier];
+        const q = t.questions[currentQ];
+        addMsg('user', answer);
+        setAnswers(prev => ({ ...prev, [q.id]: answer }));
+
+        const nextQ = currentQ + 1;
+        const pct = Math.round(((answeredCount + 1) / (totalQuestions)) * 100);
+        setProgress(Math.min(pct, 100));
+
+        if (nextQ < t.questions.length) {
+            setCurrentQ(nextQ);
+            setTimeout(() => {
+                addMsg('ai', t.questions[nextQ].q, { stringOptions: t.questions[nextQ].options });
+            }, 500);
+        } else {
+            setPhase('preview');
+            setShowPrice(true);
+            setTimeout(() => {
+                addMsg('ai', `Your ${t.name} site is ready! Take a look above 👆`);
+                if (currentTier < 4) {
+                    setTimeout(() => {
+                        const nextTier = TIERS[currentTier + 1];
+                        addMsg('ai', `This is your $${t.price} ${t.name} package. Want to upgrade to ${nextTier.name} ($${nextTier.price}) with more features?`, {
+                            decision: true,
+                            stringOptions: ['Looks good! ✨', `Upgrade to ${nextTier.name}`],
+                        });
+                    }, 800);
+                } else {
+                    setTimeout(() => {
+                        addMsg('ai', `This is the full Enterprise package — $${t.price}. Everything included. Ready?`, {
+                            decision: true,
+                            stringOptions: ['Looks good! ✨'],
+                        });
+                    }, 800);
+                }
+            }, 600);
+        }
+    };
+
+    const handleDecision = (choice: string) => {
+        addMsg('user', choice);
+        if (choice.includes('Looks good')) {
+            setTimeout(() => {
+                addMsg('ai', "Let's lock in your domain and finalize! 🎯");
+                setCheckoutSlide(true);
+                setTimeout(() => setPhase('checkout'), 600);
+            }, 400);
+        } else {
+            startTierQuestions(currentTier + 1);
+        }
+    };
+
     const domains = [
         { domain: slug + '.com', available: true, price: 12.99 },
         { domain: slug + '.net', available: true, price: 14.99 },
-        { domain: slug + '.io', available: false, price: 49.99 },
+        { domain: slug + '.co', available: true, price: 29.99 },
     ];
 
-    // ── Step labels for progress bar ──
-    const stepLabels = ['Info', 'Colors', 'Hero', 'Layout', 'Trust', 'Leads', 'Pages', 'Done'];
-
-    // ── Glassmorphic OptionCard ──
-    const OptionCard = ({ selected, label, price, onClick, desc }: { selected: boolean; label: string; price: number; onClick: () => void; desc?: string }) => (
-        <button onClick={onClick} className={`w-full p-4 rounded-2xl border text-left transition-all duration-300 backdrop-blur-sm group
-            ${selected
-                ? 'bg-gradient-to-r from-purple-500/10 via-cyan-500/5 to-transparent border-cyan-500/40 shadow-[0_0_25px_rgba(6,182,212,0.12)]'
-                : 'bg-white/[0.02] border-white/[0.06] hover:border-white/15 hover:bg-white/[0.04] hover:scale-[1.01]'
-            }`}>
-            <div className="flex items-center justify-between gap-3">
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                        {selected && <div className="w-4 h-4 rounded-full bg-gradient-to-br from-purple-500 to-cyan-400 flex items-center justify-center shrink-0">
-                            <svg className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
-                        </div>}
-                        <h4 className={`font-bold text-sm ${selected ? 'text-white' : 'text-slate-300 group-hover:text-white'}`}>{label}</h4>
-                    </div>
-                    {desc && <p className="text-[11px] text-slate-500 mt-0.5 ml-6">{desc}</p>}
-                </div>
-                <span className={`text-sm font-black tracking-tight shrink-0 ${selected ? 'text-cyan-400' : 'text-slate-600'}`}>${price}</span>
-            </div>
-        </button>
-    );
+    // ── Design for LiveMockup ──
+    const design = {
+        pages: currentTier >= 4 ? '6' : currentTier >= 3 ? '4' : currentTier >= 1 ? '3' : '1',
+        mode: 'dark',
+        shadows: currentTier >= 3 ? 'heavy' : 'subtle',
+        borders: 'rounded',
+        layout: currentTier >= 2 ? 'zigzag' : 'stack',
+        images: 'few',
+        hero: currentTier >= 4 ? '3d' : currentTier >= 3 ? 'video' : currentTier >= 2 ? 'floating-form' : currentTier >= 1 ? 'split' : 'basic',
+    };
+    const features: string[] = [];
+    if (currentTier >= 1) features.push('testimonials');
+    if (currentTier >= 4) features.push('blog', 'ecommerce');
 
     return (
-        <div className="w-full min-h-screen flex font-sans bg-[#0d0521] text-slate-200 relative overflow-hidden">
-            {/* ═══ Ambient Glows ═══ */}
+        <div className="w-full min-h-screen bg-[#0d0521] text-white font-sans relative overflow-y-auto overflow-x-hidden scrollbar-hide">
+            {/* Ambient Glows */}
             <div className="fixed inset-0 z-0 pointer-events-none">
-                <div className="absolute top-[-15%] left-[15%] w-[50vw] h-[50vw] rounded-full blur-[120px] mix-blend-screen bg-purple-600/15 animate-[pulse_8s_ease-in-out_infinite]" />
-                <div className="absolute top-[40%] right-[10%] w-[40vw] h-[40vw] rounded-full blur-[100px] mix-blend-screen bg-cyan-500/8 animate-[pulse_6s_ease-in-out_infinite]" />
-                <div className="absolute bottom-[-10%] left-[30%] w-[45vw] h-[45vw] rounded-full blur-[110px] mix-blend-screen bg-purple-500/10 animate-[pulse_7s_ease-in-out_infinite]" />
+                <div className="absolute top-[-20%] left-[10%] w-[60vw] h-[60vw] rounded-full blur-[150px] bg-purple-600/10 animate-[pulse_8s_ease-in-out_infinite]" />
+                <div className="absolute top-[30%] right-[5%] w-[45vw] h-[45vw] rounded-full blur-[120px] bg-cyan-500/8 animate-[pulse_6s_ease-in-out_infinite]" />
+                <div className="absolute bottom-[-15%] left-[25%] w-[50vw] h-[50vw] rounded-full blur-[130px] bg-purple-500/8 animate-[pulse_7s_ease-in-out_infinite]" />
             </div>
-            {/* Grid */}
-            <div className="fixed inset-0 bg-[size:40px_40px] pointer-events-none z-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_80%)]" />
+            <div className="fixed inset-0 bg-[size:40px_40px] pointer-events-none z-0 bg-[linear-gradient(rgba(168,85,247,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.025)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_80%)]" />
 
-            {/* ═══ LEFT PANEL ═══ */}
-            <div className="relative z-10 w-full md:w-[45%] lg:w-[42%] min-h-screen overflow-y-auto p-6 md:p-10 flex flex-col">
+            <div className="relative z-10 flex flex-col items-center min-h-screen">
 
-                {/* ── Progress Bar ── */}
-                <div className="mb-8">
-                    <div className="flex items-center gap-1 mb-2">
-                        {stepLabels.map((label, i) => (
-                            <div key={label} className="flex-1 flex flex-col items-center gap-1">
-                                <div className={`w-full h-1 rounded-full transition-all duration-500 ${i < stepIndex ? 'bg-gradient-to-r from-purple-500 to-cyan-400'
-                                        : i === stepIndex ? 'bg-gradient-to-r from-purple-500 to-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.4)]'
-                                            : 'bg-white/[0.06]'
-                                    }`} />
-                                <span className={`text-[8px] font-bold uppercase tracking-widest transition-colors ${i <= stepIndex ? 'text-cyan-400/80' : 'text-slate-700'
-                                    }`}>{label}</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* ── Price Badge ── */}
-                <div className="flex items-center justify-between mb-6">
-                    <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600">
-                        Step {stepIndex + 1} of {steps.length}
-                    </div>
-                    <div className="px-5 py-2.5 rounded-2xl font-mono backdrop-blur-xl bg-white/[0.04] border border-white/[0.08] shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
-                        <span className="text-lg font-black text-cyan-400">${totalPrice}</span>
-                        <span className="text-[10px] font-bold text-slate-500 ml-2 uppercase tracking-widest">{tier}</span>
-                    </div>
-                </div>
-
-                {/* ═══ Step Content ═══ */}
-                <div className="flex-1">
-
-                    {step === 'info' && (
-                        <div className="space-y-6">
-                            <div>
-                                <h2 className="text-3xl font-black tracking-tighter text-white">Let's build your site.</h2>
-                                <p className="text-sm text-slate-500 mt-1">Tell us about your business and we'll design the perfect website.</p>
-                            </div>
-                            <div>
-                                <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-purple-400/80 mb-2">Business Name</label>
-                                <input required type="text" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full bg-transparent border-b-2 border-purple-800/50 focus:border-cyan-400 py-3 text-xl font-bold text-white placeholder:text-slate-700 focus:outline-none transition-colors"
-                                    placeholder="Acme Corp" />
-                            </div>
-                            <div>
-                                <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-purple-400/80 mb-2">Industry</label>
-                                <input required type="text" value={formData.industry} onChange={e => setFormData({ ...formData, industry: e.target.value })}
-                                    className="w-full bg-transparent border-b-2 border-purple-800/50 focus:border-cyan-400 py-3 text-xl font-bold text-white placeholder:text-slate-700 focus:outline-none transition-colors"
-                                    placeholder="Plumbing" />
-                            </div>
-                        </div>
-                    )}
-
-                    {step === 'colors' && (
-                        <ColorPalettePicker onSelect={p => { setPalette(p); next(); }} onColorsChange={c => setPalette(c)} />
-                    )}
-
-                    {step === 'hero' && (
-                        <div className="space-y-3">
-                            <div className="mb-4">
-                                <h3 className="text-xl font-black tracking-tight text-white">Choose Your Hero</h3>
-                                <p className="text-xs text-slate-500 mt-0.5">The first thing visitors see — make it count.</p>
-                            </div>
-                            {HERO_OPTIONS.map(h => (
-                                <OptionCard key={h.id} selected={selectedHero.id === h.id} label={h.label} price={h.price} desc={h.desc}
-                                    onClick={() => { setSelectedHero(h); setDesign({ ...design, hero: h.id }); }} />
-                            ))}
-                        </div>
-                    )}
-
-                    {step === 'layout' && (
-                        <div className="space-y-3">
-                            <div className="mb-4">
-                                <h3 className="text-xl font-black tracking-tight text-white">Feature Layout</h3>
-                                <p className="text-xs text-slate-500 mt-0.5">How your services and value props are displayed.</p>
-                            </div>
-                            {FEATURE_OPTIONS.map(f => (
-                                <OptionCard key={f.id} selected={selectedFeature.id === f.id} label={f.label} price={f.price} desc={f.desc}
-                                    onClick={() => {
-                                        setSelectedFeature(f);
-                                        const layoutMap: Record<string, string> = { '3point': 'stack', 'icon-grid': 'stack', 'zigzag': 'zigzag', 'hover-cards': 'stack', 'scroll-anim': 'sidebar' };
-                                        setDesign({ ...design, layout: layoutMap[f.id] || 'stack' });
-                                    }} />
-                            ))}
-                        </div>
-                    )}
-
-                    {step === 'trust' && (
-                        <div className="space-y-3">
-                            <div className="mb-4">
-                                <h3 className="text-xl font-black tracking-tight text-white">Trust & Social Proof</h3>
-                                <p className="text-xs text-slate-500 mt-0.5">Build credibility with reviews and testimonials.</p>
-                            </div>
-                            {TRUST_OPTIONS.map(t => (
-                                <OptionCard key={t.id} selected={selectedTrust.id === t.id} label={t.label} price={t.price} desc={t.desc}
-                                    onClick={() => setSelectedTrust(t)} />
-                            ))}
-                        </div>
-                    )}
-
-                    {step === 'integration' && (
-                        <div className="space-y-3">
-                            <div className="mb-4">
-                                <h3 className="text-xl font-black tracking-tight text-white">Lead Capture</h3>
-                                <p className="text-xs text-slate-500 mt-0.5">How visitors become customers.</p>
-                            </div>
-                            {INTEGRATION_OPTIONS.map(ig => (
-                                <OptionCard key={ig.id} selected={selectedIntegration.id === ig.id} label={ig.label} price={ig.price} desc={ig.desc}
-                                    onClick={() => setSelectedIntegration(ig)} />
-                            ))}
-                        </div>
-                    )}
-
-                    {step === 'pages' && (
-                        <div className="space-y-5">
-                            <div className="mb-2">
-                                <h3 className="text-xl font-black tracking-tight text-white">Pages & Design</h3>
-                                <p className="text-xs text-slate-500 mt-0.5">$49 per page — choose your count and style.</p>
-                            </div>
-                            <div>
-                                <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-purple-400/80 mb-2">Page Count</label>
-                                <div className="flex gap-2">
-                                    {[1, 3, 4, 5, 6].map(n => (
-                                        <button key={n} onClick={() => { setPageCount(n); setDesign({ ...design, pages: String(n) }); }}
-                                            className={`flex-1 py-3 rounded-xl border font-bold text-sm transition-all duration-300 ${pageCount === n
-                                                ? 'bg-gradient-to-r from-purple-500/15 to-cyan-500/10 border-cyan-500/40 text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.1)]'
-                                                : 'bg-white/[0.02] border-white/[0.06] text-slate-500 hover:border-white/15 hover:text-slate-300'}`}>
-                                            {n}
-                                        </button>
-                                    ))}
+                {/* ═══ SPLASH ═══ */}
+                {phase === 'splash' && (
+                    <div className="flex-1 flex flex-col items-center justify-center gap-8 px-6">
+                        <div className="relative cursor-pointer group" onClick={handleBegin}>
+                            <div className="absolute -inset-3 rounded-2xl blur-xl opacity-60 animate-[pulse_3s_ease-in-out_infinite] bg-gradient-to-r from-purple-600/40 via-cyan-500/30 to-pink-500/40" />
+                            <div className="absolute -inset-6 rounded-3xl blur-2xl opacity-30 animate-[pulse_4s_ease-in-out_infinite_0.5s] bg-gradient-to-r from-cyan-400/20 via-purple-500/20 to-amber-400/20" />
+                            <div className="relative w-[700px] max-w-[90vw] h-[400px] bg-black rounded-2xl border border-white/[0.06] flex items-center justify-center overflow-hidden shadow-2xl group-hover:border-white/15 transition-all duration-500 group-hover:scale-[1.01]">
+                                <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-cyan-900/10" />
+                                <div className="text-center relative z-10">
+                                    <div className="text-3xl font-black tracking-tighter bg-gradient-to-r from-purple-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent bg-[length:200%_100%] animate-[shimmer_3s_ease-in-out_infinite]">
+                                        Click Begin
+                                    </div>
+                                    <p className="text-sm text-slate-600 mt-2">Your website starts here</p>
                                 </div>
                             </div>
-                            <div className="grid grid-cols-3 gap-3">
-                                {([['shadows', ['none', 'subtle', 'heavy']], ['borders', ['rounded', 'sharp', 'pill']], ['mode', ['dark', 'light', 'both']]] as [string, string[]][]).map(([key, opts]) => (
-                                    <div key={key}>
-                                        <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-600">{key}</span>
-                                        <div className="flex flex-col gap-1 mt-1.5">
-                                            {opts.map(o => (
-                                                <button key={o} onClick={() => setDesign({ ...design, [key]: o })}
-                                                    className={`py-1.5 text-[10px] font-bold rounded-lg border transition-all ${design[key as keyof typeof design] === o
-                                                        ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400'
-                                                        : 'border-white/[0.04] text-slate-600 hover:text-slate-400'}`}>
-                                                    {o}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            {/* Bundled Features Indicators */}
-                            <div className="pt-3 border-t border-white/[0.04] space-y-2">
-                                <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-600">Included In Your Tier</span>
-                                {[
-                                    { label: 'Simple AI+ Concierge', included: includesAIPlus, tier: 'Business+' },
-                                    { label: 'E-Commerce Ready', included: includesEcom, tier: 'Premium+' },
-                                    { label: 'Blog Infrastructure', included: includesBlog, tier: 'Enterprise' },
-                                    { label: 'Custom Logo + Compliance', included: includesLogo, tier: 'Premium+' },
-                                ].map(item => (
-                                    <div key={item.label} className={`flex items-center gap-2 p-2.5 rounded-xl border transition-all ${item.included
-                                            ? 'bg-emerald-500/[0.06] border-emerald-500/20'
-                                            : 'border-white/[0.04] opacity-35'}`}>
-                                        <span className={`text-xs ${item.included ? 'text-emerald-400' : 'text-slate-600'}`}>{item.included ? '✓' : '○'}</span>
-                                        <span className={`text-xs font-bold ${item.included ? 'text-white' : 'text-slate-600'}`}>{item.label}</span>
-                                        <span className={`ml-auto text-[9px] font-bold ${item.included ? 'text-emerald-400' : 'text-slate-700'}`}>
-                                            {item.included ? 'Included' : item.tier}
-                                        </span>
-                                    </div>
-                                ))}
-                            </div>
                         </div>
-                    )}
-
-                    {step === 'summary' && (
-                        <div className="space-y-5">
-                            <div>
-                                <h3 className="text-xl font-black tracking-tight text-white">Pick Your Domain</h3>
-                                <p className="text-xs text-slate-500 mt-0.5">Choose a domain and review your build.</p>
+                        <button onClick={handleBegin} className="relative group">
+                            <div className="absolute -inset-2 rounded-full blur-lg opacity-50 animate-[pulse_2.5s_ease-in-out_infinite] bg-gradient-to-r from-purple-500/40 to-cyan-400/40" />
+                            <div className="relative flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-purple-600/80 to-cyan-500/80 border border-white/10 shadow-[0_0_30px_rgba(168,85,247,0.3)] hover:shadow-[0_0_50px_rgba(168,85,247,0.5)] transition-all group-hover:scale-105">
+                                <img src="/favicon_io/android-chrome-192x192.png" alt="Simple AI" className="w-7 h-7 rounded-full object-cover" />
+                                <span className="font-black text-lg tracking-tight">Begin</span>
                             </div>
-                            <div className="space-y-2">
-                                {domains.map((d, i) => (
-                                    <div key={i} className={`flex items-center justify-between p-3 rounded-xl border backdrop-blur-sm ${domain === d.domain ? 'bg-cyan-500/[0.06] border-cyan-500/30' : 'bg-white/[0.02] border-white/[0.06]'}`}>
-                                        <div>
-                                            <span className={`font-bold text-sm ${!d.available ? 'line-through opacity-40' : 'text-white'}`}>{d.domain}</span>
-                                            {d.available && <span className="ml-2 text-xs text-emerald-400">${d.price}/yr</span>}
-                                        </div>
-                                        {d.available ? (
-                                            <button onClick={() => setDomain(d.domain)} className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${domain === d.domain
-                                                ? 'bg-cyan-500/20 text-cyan-400 border-cyan-500/50'
-                                                : 'bg-white/[0.03] text-slate-400 border-white/10 hover:border-white/20'}`}>
-                                                {domain === d.domain ? '✓ Selected' : 'Select'}
-                                            </button>
-                                        ) : <span className="text-xs font-bold text-pink-500">Taken</span>}
-                                    </div>
-                                ))}
-                            </div>
-
-                            {/* Price Summary */}
-                            <div className="p-5 rounded-2xl border bg-white/[0.02] border-white/[0.06] backdrop-blur-sm">
-                                <h4 className="text-sm font-bold text-white mb-3">Price Summary</h4>
-                                <div className="space-y-1.5 text-xs">
-                                    <div className="flex justify-between"><span className="text-slate-400">Hero: {selectedHero.label}</span><span className="text-slate-300">${selectedHero.price}</span></div>
-                                    <div className="flex justify-between"><span className="text-slate-400">Layout: {selectedFeature.label}</span><span className="text-slate-300">${selectedFeature.price}</span></div>
-                                    <div className="flex justify-between"><span className="text-slate-400">Trust: {selectedTrust.label}</span><span className="text-slate-300">${selectedTrust.price}</span></div>
-                                    <div className="flex justify-between"><span className="text-slate-400">Integration: {selectedIntegration.label}</span><span className="text-slate-300">${selectedIntegration.price}</span></div>
-                                    <div className="flex justify-between"><span className="text-slate-400">{pageCount} Page{pageCount > 1 ? 's' : ''}</span><span className="text-slate-300">${pageCount * 49}</span></div>
-                                    <div className="flex justify-between pt-3 mt-3 border-t border-white/10 font-bold text-base">
-                                        <span className="text-white">Total <span className="text-cyan-400">({tier})</span></span>
-                                        <span className="text-cyan-400 font-black">${totalPrice}</span>
-                                    </div>
-                                    <div className="flex justify-between text-[10px] text-slate-600">
-                                        <span>+ Monthly</span><span>$29/mo hosting & Simple AI+</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Bundled features summary */}
-                            {(includesAIPlus || includesEcom || includesBlog) && (
-                                <div className="flex flex-wrap gap-1.5">
-                                    {includesAIPlus && <span className="px-3 py-1 text-[10px] font-bold rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/20">🤖 Simple AI+ Included</span>}
-                                    {includesEcom && <span className="px-3 py-1 text-[10px] font-bold rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">🛒 E-Commerce Ready</span>}
-                                    {includesBlog && <span className="px-3 py-1 text-[10px] font-bold rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">✍️ Blog Included</span>}
-                                    {includesLogo && <span className="px-3 py-1 text-[10px] font-bold rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20">🎨 Custom Logo</span>}
-                                </div>
-                            )}
-
-                            <button className="w-full py-4 rounded-2xl font-bold text-sm uppercase tracking-[0.15em] transition-all bg-gradient-to-r from-purple-600 via-purple-500 to-cyan-500 text-white shadow-[0_0_30px_rgba(168,85,247,0.3)] hover:shadow-[0_0_45px_rgba(168,85,247,0.45)] hover:scale-[1.01] active:scale-[0.99]">
-                                Build My Website →
-                            </button>
-                        </div>
-                    )}
-                </div>
-
-                {/* ── Nav Buttons ── */}
-                {step !== 'summary' && (
-                    <div className="flex gap-3 pt-6 mt-auto">
-                        {stepIndex > 0 && (
-                            <button onClick={back} className="px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-[0.15em] border border-white/[0.06] text-slate-500 hover:text-white hover:border-white/15 transition-all">
-                                ← Back
-                            </button>
-                        )}
-                        <button onClick={next} disabled={!canNext}
-                            className={`flex-1 py-3.5 rounded-xl font-bold text-xs uppercase tracking-[0.15em] transition-all duration-300 ${canNext
-                                ? 'bg-gradient-to-r from-purple-600/80 to-purple-700/80 border border-purple-500/30 text-white hover:border-cyan-400/40 hover:shadow-[0_0_20px_rgba(168,85,247,0.2)] active:scale-[0.99]'
-                                : 'opacity-20 cursor-not-allowed bg-white/[0.02] border border-white/[0.04] text-slate-700'}`}>
-                            Next →
                         </button>
                     </div>
                 )}
-            </div>
 
-            {/* ═══ RIGHT PANEL: Browser Preview + Chat ═══ */}
-            <div className="hidden md:flex relative z-10 flex-1 flex-col p-6 md:p-10 sticky top-0 h-screen overflow-y-auto">
-                <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-slate-600 mb-4">Live Preview</div>
+                {/* ═══ ACTIVE ═══ */}
+                {phase !== 'splash' && (
+                    <div className={`flex-1 w-full flex transition-all duration-700 ${phase === 'checkout' ? 'flex-row' : 'flex-col items-center'} px-6 pt-16 pb-8`}>
 
-                <LiveMockup businessName={formData.name} palette={palette} design={design} features={features} tier={tier} />
+                        {/* ── PREVIEW ── */}
+                        <div className={`relative transition-all duration-700 ease-out ${phase === 'checkout' ? 'w-1/2 pl-[5%]' : 'w-full max-w-[750px]'}`}>
+                            <div className="relative">
+                                <div className="absolute -inset-8 rounded-3xl blur-3xl opacity-70 transition-all duration-700 animate-[colorShift_6s_ease-in-out_infinite]"
+                                    style={{
+                                        background: colors.length >= 4
+                                            ? `radial-gradient(ellipse at center, ${colors[0]}50, ${colors[1]}40, ${colors[2]}30, transparent 70%)`
+                                            : 'radial-gradient(ellipse at center, rgba(168,85,247,0.4), rgba(6,182,212,0.3), rgba(244,63,94,0.2), transparent 70%)'
+                                    }} />
 
-                {/* ── Simple AI Chat ── */}
-                {showChat && (
-                    <div className="mt-4 rounded-2xl border border-white/[0.06] backdrop-blur-xl bg-white/[0.02] flex flex-col shadow-[0_8px_30px_rgba(0,0,0,0.2)]" style={{ maxHeight: '220px' }}>
-                        <div className="px-4 py-2.5 flex items-center gap-2 border-b border-white/[0.04]">
-                            <span className="w-5 h-5 rounded-full bg-gradient-to-br from-purple-500 to-cyan-400 flex items-center justify-center text-[8px]">🤖</span>
-                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-400">Simple AI</span>
+                                {phase === 'questions' ? (
+                                    /* PROGRESS BAR MODE */
+                                    <div className="relative rounded-2xl overflow-hidden border border-white/[0.06] shadow-2xl" style={{ aspectRatio: '16/9' }}>
+                                        <div className="flex items-center px-3 py-2 gap-2 bg-gradient-to-b from-[#2a2a2e] to-[#1e1e22] border-b border-white/[0.04]">
+                                            <div className="flex gap-1.5">
+                                                <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+                                                <div className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+                                                <div className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+                                            </div>
+                                            <div className="flex-1 flex items-center justify-center px-3 py-1 rounded-md mx-8 bg-black/30 border border-white/[0.06]">
+                                                <span className="text-[9px] font-mono text-slate-500"><span className="text-green-400/60">🔒</span> https://{slug}.com</span>
+                                            </div>
+                                        </div>
+                                        <div className="bg-black flex flex-col items-center justify-center p-10" style={{ minHeight: '340px' }}>
+                                            <div className="text-xl font-black tracking-tighter text-white/30 mb-1">{businessName}</div>
+                                            <div className="text-[10px] text-slate-600 mb-6 uppercase tracking-[0.3em]">Building your {tier.name}...</div>
+                                            <div className="w-72 h-2.5 rounded-full bg-white/[0.04] overflow-hidden">
+                                                <div className="h-full rounded-full transition-all duration-1000 ease-out"
+                                                    style={{
+                                                        width: `${progress}%`,
+                                                        background: colors.length >= 4
+                                                            ? `linear-gradient(90deg, ${colors[0]}, ${colors[1]}, ${colors[2]}, ${colors[3]})`
+                                                            : 'linear-gradient(90deg, #7c3aed, #06b6d4, #f43f5e)',
+                                                        boxShadow: colors.length >= 4
+                                                            ? `0 0 20px ${colors[0]}60, 0 0 40px ${colors[1]}30`
+                                                            : '0 0 20px rgba(124,58,237,0.5), 0 0 40px rgba(6,182,212,0.3)',
+                                                    }} />
+                                            </div>
+                                            <div className="text-xs text-slate-600 mt-3 font-mono">{progress}%</div>
+                                        </div>
+                                    </div>
+                                ) : (phase === 'preview' || phase === 'checkout') ? (
+                                    /* FULL SITE PREVIEW */
+                                    <div className="relative">
+                                        <LiveMockup businessName={businessName} palette={colors.length >= 4 ? colors : ['#7c3aed', '#06b6d4', '#f43f5e', '#10b981']} design={design} features={features} tier={tier.name} />
+                                        {showPrice && (
+                                            <div className="absolute top-14 right-4 px-5 py-3 rounded-xl bg-black/80 backdrop-blur-xl border border-white/10 shadow-[0_0_20px_rgba(0,0,0,0.3)] animate-[fadeIn_0.5s_ease-out]">
+                                                <div className="text-2xl font-black text-cyan-400">${tier.price}</div>
+                                                <div className="text-[9px] text-slate-500 uppercase tracking-widest">{tier.name}</div>
+                                                {tier.monthly > 0 && <div className="text-[9px] text-purple-400 mt-0.5">+${tier.monthly}/mo AI+</div>}
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    /* PLACEHOLDER (name/colors/images) */
+                                    <div className="relative rounded-2xl overflow-hidden border border-white/[0.06] shadow-2xl" style={{ aspectRatio: '16/9' }}>
+                                        <div className="flex items-center px-3 py-2 gap-2 bg-gradient-to-b from-[#2a2a2e] to-[#1e1e22] border-b border-white/[0.04]">
+                                            <div className="flex gap-1.5">
+                                                <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+                                                <div className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+                                                <div className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+                                            </div>
+                                            <div className="flex-1 flex items-center justify-center px-3 py-1 rounded-md mx-8 bg-black/30 border border-white/[0.06]">
+                                                <span className="text-[9px] font-mono text-slate-500"><span className="text-green-400/60">🔒</span> https://{slug || 'yoursite'}.com</span>
+                                            </div>
+                                        </div>
+                                        <div className="bg-black flex flex-col items-center justify-center p-10" style={{ minHeight: '340px' }}>
+                                            {colors.length > 0 ? (
+                                                <div className="flex flex-col items-center gap-3">
+                                                    <div className="flex gap-3">
+                                                        {colors.map((c, i) => (
+                                                            <div key={i} className="w-12 h-12 rounded-xl shadow-lg" style={{ backgroundColor: c, boxShadow: `0 0 20px ${c}40` }} />
+                                                        ))}
+                                                        {Array.from({ length: 4 - colors.length }).map((_, i) => (
+                                                            <div key={`e-${i}`} className="w-12 h-12 rounded-xl border border-dashed border-white/10" />
+                                                        ))}
+                                                    </div>
+                                                    <span className="text-xs text-slate-600">{colors.length}/4 colors</span>
+                                                </div>
+                                            ) : (
+                                                <div className="text-center">
+                                                    <div className="text-lg font-black text-white/20">{businessName || 'Your Business'}</div>
+                                                    <div className="text-xs text-slate-700 mt-1">Waiting for your colors...</div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                        <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2" style={{ minHeight: '80px' }}>
-                            {chatMessages.length === 0 && (
-                                <p className="text-xs italic text-slate-600">Tell me what else you want — I'll customize your site.</p>
-                            )}
-                            {chatMessages.map((m, i) => (
-                                <div key={i} className={`text-xs p-2.5 rounded-xl max-w-[85%] ${m.role === 'user'
-                                    ? 'ml-auto bg-purple-900/40 text-white border border-purple-500/10'
-                                    : 'bg-white/[0.03] text-slate-300 border border-white/[0.04]'}`}>
-                                    {m.text}
+
+                        {/* ── CHECKOUT (slides in from right) ── */}
+                        {phase === 'checkout' && (
+                            <div className={`w-1/2 flex flex-col justify-center p-10 transition-all duration-700 ${checkoutSlide ? 'translate-x-0 opacity-100' : 'translate-x-[100px] opacity-0'}`}>
+                                <h3 className="text-2xl font-black tracking-tighter text-white mb-2">Secure Your Domain</h3>
+                                <p className="text-sm text-slate-500 mb-6">Your {tier.name} package — ${tier.price}</p>
+                                <div className="space-y-3 mb-6">
+                                    {domains.map((d, i) => (
+                                        <button key={i} onClick={() => setSelectedDomain(d.domain)}
+                                            className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all ${selectedDomain === d.domain
+                                                ? 'bg-cyan-500/[0.06] border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.1)]'
+                                                : 'bg-white/[0.02] border-white/[0.06] hover:border-white/15'}`}>
+                                            <span className="font-bold">{d.domain}</span>
+                                            <span className="text-emerald-400 text-sm">${d.price}/yr</span>
+                                        </button>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
-                        <div className="flex gap-2 p-3 border-t border-white/[0.04]">
-                            <input value={chatInput} onChange={e => setChatInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && sendChat()}
-                                placeholder="Type here..."
-                                className="flex-1 px-3 py-2 rounded-lg text-xs bg-white/[0.03] text-white border border-white/[0.06] placeholder:text-slate-700 focus:outline-none focus:border-cyan-500/30" />
-                            <button onClick={sendChat} className="px-4 py-2 rounded-lg text-xs font-bold bg-gradient-to-r from-purple-600/30 to-cyan-500/20 text-cyan-400 border border-cyan-500/20 hover:border-cyan-400/40 transition-all">
-                                Send
-                            </button>
-                        </div>
+                                {/* Itemized breakdown */}
+                                <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06] mb-6">
+                                    <h4 className="text-sm font-bold mb-3">What's Included</h4>
+                                    <div className="space-y-1.5 text-xs">
+                                        {TIERS.slice(0, currentTier + 1).flatMap(t => t.includes).map((item, i) => (
+                                            <div key={i} className="flex justify-between">
+                                                <span className="text-slate-400">{item.replace(/\s*\(\$\d+.*?\)/, '')}</span>
+                                                <span className="text-slate-500 text-[10px]">{item.match(/\(\$.*?\)/)?.[0] || ''}</span>
+                                            </div>
+                                        ))}
+                                        <div className="flex justify-between pt-3 mt-3 border-t border-white/10 text-base font-black">
+                                            <span>Total <span className="text-cyan-400">({tier.name})</span></span>
+                                            <span className="text-cyan-400">${tier.price}</span>
+                                        </div>
+                                        {tier.monthly > 0 && (
+                                            <div className="flex justify-between text-[10px] text-purple-400">
+                                                <span>+ Simple AI+</span><span>${tier.monthly}/mo</span>
+                                            </div>
+                                        )}
+                                        <div className="flex justify-between text-[10px] text-slate-600">
+                                            <span>+ Hosting &amp; management</span><span>$29/mo</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button className="w-full py-4 rounded-2xl font-bold text-sm uppercase tracking-[0.15em] bg-gradient-to-r from-purple-600 via-purple-500 to-cyan-500 text-white shadow-[0_0_30px_rgba(168,85,247,0.3)] hover:shadow-[0_0_50px_rgba(168,85,247,0.5)] hover:scale-[1.01] active:scale-[0.99] transition-all">
+                                    Build My Website →
+                                </button>
+                            </div>
+                        )}
+
+                        {/* ═══ CHAT WINDOW ═══ */}
+                        {phase !== 'checkout' && (
+                            <div className="w-full max-w-[750px] mt-6 relative">
+                                <div className="absolute -inset-6 rounded-3xl blur-2xl opacity-50 bg-cyan-500/20" />
+                                <div className="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-xl shadow-[0_8px_60px_rgba(6,182,212,0.15),0_0_80px_rgba(6,182,212,0.08)] flex flex-col overflow-hidden" style={{ maxHeight: '360px' }}>
+                                    {/* Header */}
+                                    <div className="px-4 py-3 flex items-center gap-2 border-b border-white/[0.04] shrink-0">
+                                        <div className="relative">
+                                            <div className="absolute -inset-1 rounded-full blur-sm bg-gradient-to-r from-purple-500/40 to-cyan-400/40 animate-[pulse_2s_ease-in-out_infinite]" />
+                                            <img src="/favicon_io/android-chrome-192x192.png" alt="Simple AI" className="relative w-7 h-7 rounded-full object-cover" />
+                                        </div>
+                                        <span className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400">Simple AI</span>
+                                        <span className="text-[9px] text-emerald-400 ml-1">● Online</span>
+                                    </div>
+
+                                    {/* Messages */}
+                                    <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-[120px] scrollbar-hide">
+                                        {chat.map((msg, i) => (
+                                            <div key={i}>
+                                                <div className={`text-sm p-3 rounded-2xl max-w-[85%] animate-[fadeSlideIn_0.3s_ease-out] ${msg.role === 'user'
+                                                    ? 'ml-auto bg-purple-900/40 text-white border border-purple-500/10 rounded-br-sm'
+                                                    : 'bg-white/[0.03] text-slate-300 border border-white/[0.04] rounded-bl-sm'}`}>
+                                                    {msg.text}
+                                                </div>
+
+                                                {/* Color Wheel */}
+                                                {msg.colorPicker && i === chat.length - 1 && colors.length < 4 && (
+                                                    <div className="mt-3 p-4 rounded-xl bg-white/[0.02] border border-white/[0.04] flex flex-col items-center gap-3">
+                                                        <div ref={wheelRef} onClick={handleWheelClick}
+                                                            className="w-44 h-44 rounded-full cursor-crosshair relative shadow-[0_0_30px_rgba(124,58,237,0.2)] hover:shadow-[0_0_40px_rgba(124,58,237,0.3)] transition-shadow"
+                                                            style={{
+                                                                background: 'conic-gradient(from 0deg, hsl(0,85%,55%), hsl(60,85%,55%), hsl(120,85%,55%), hsl(180,85%,55%), hsl(240,85%,55%), hsl(300,85%,55%), hsl(360,85%,55%))',
+                                                            }}>
+                                                            <div className="absolute inset-0 rounded-full" style={{
+                                                                background: 'radial-gradient(circle, rgba(255,255,255,0.25) 0%, transparent 70%)',
+                                                            }} />
+                                                        </div>
+                                                        <div className="flex gap-2 items-center">
+                                                            {colors.map((c, ci) => (
+                                                                <div key={ci} className="w-9 h-9 rounded-lg shadow-lg ring-1 ring-white/20" style={{ backgroundColor: c, boxShadow: `0 0 12px ${c}50` }} />
+                                                            ))}
+                                                            {Array.from({ length: 4 - colors.length }).map((_, ci) => (
+                                                                <div key={`e-${ci}`} className="w-9 h-9 rounded-lg border border-dashed border-white/10" />
+                                                            ))}
+                                                            <span className="text-[10px] text-slate-600 ml-1">{colors.length}/4</span>
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {/* Question options (not decision) */}
+                                                {msg.stringOptions && !msg.decision && i === chat.length - 1 && (
+                                                    <div className="mt-2 flex flex-wrap gap-2">
+                                                        {msg.stringOptions.map(opt => (
+                                                            <button key={opt} onClick={() => handleAnswer(opt)}
+                                                                className="px-4 py-2 rounded-xl text-xs font-bold bg-white/[0.03] border border-white/[0.06] text-slate-300 hover:bg-purple-500/10 hover:border-purple-500/30 hover:text-white transition-all hover:scale-[1.02]">
+                                                                {opt}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
+
+                                                {/* Decision buttons */}
+                                                {msg.decision && msg.stringOptions && i === chat.length - 1 && (
+                                                    <div className="mt-3 flex gap-2">
+                                                        {msg.stringOptions.map(opt => (
+                                                            <button key={opt} onClick={() => handleDecision(opt)}
+                                                                className={`flex-1 py-3 rounded-xl text-sm font-bold border transition-all hover:scale-[1.01] ${opt.includes('Looks good')
+                                                                    ? 'bg-gradient-to-r from-purple-600/60 to-cyan-500/40 border-cyan-500/30 text-white shadow-[0_0_20px_rgba(6,182,212,0.15)]'
+                                                                    : 'bg-white/[0.03] border-white/[0.08] text-slate-300 hover:border-white/20'}`}>
+                                                                {opt}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                        <div ref={chatEndRef} />
+                                    </div>
+
+                                    {/* Input for name / images */}
+                                    {(phase === 'name' || phase === 'images') && (
+                                        <div className="px-4 py-3 border-t border-white/[0.04] shrink-0">
+                                            <div className="flex gap-2">
+                                                {phase === 'name' ? (
+                                                    <>
+                                                        <input ref={nameInputRef} value={businessName} onChange={e => setBusinessName(e.target.value)}
+                                                            onKeyDown={e => e.key === 'Enter' && handleNameSubmit()}
+                                                            placeholder="Enter your business name..."
+                                                            className="flex-1 px-4 py-2.5 rounded-xl text-sm bg-white/[0.03] text-white border border-white/[0.06] placeholder:text-slate-700 focus:outline-none focus:border-cyan-500/30" />
+                                                        <button onClick={handleNameSubmit} className="px-5 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-purple-600/40 to-cyan-500/30 text-cyan-400 border border-cyan-500/20 hover:border-cyan-400/40 transition-all">Send</button>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <input value={imgInput} onChange={e => setImgInput(e.target.value)}
+                                                            onKeyDown={e => e.key === 'Enter' && handleImageAdd()}
+                                                            placeholder='Describe an image (or "skip")...'
+                                                            className="flex-1 px-4 py-2.5 rounded-xl text-sm bg-white/[0.03] text-white border border-white/[0.06] placeholder:text-slate-700 focus:outline-none focus:border-cyan-500/30" />
+                                                        <button onClick={handleImageAdd} className="px-5 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-purple-600/40 to-cyan-500/30 text-cyan-400 border border-cyan-500/20 hover:border-cyan-400/40 transition-all">Send</button>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
+
+            <style jsx global>{`
+                @keyframes shimmer { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+                @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+                @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+                *, *::before, *::after { scrollbar-width: none !important; -ms-overflow-style: none !important; }
+                *::-webkit-scrollbar { display: none !important; }
+                html, body { overflow-x: hidden; scrollbar-width: none !important; -ms-overflow-style: none !important; }
+                html::-webkit-scrollbar, body::-webkit-scrollbar { display: none !important; }
+                @keyframes colorShift {
+                    0%, 100% { filter: hue-rotate(0deg) brightness(1); }
+                    33% { filter: hue-rotate(30deg) brightness(1.1); }
+                    66% { filter: hue-rotate(-20deg) brightness(1.05); }
+                }
+            `}</style>
         </div>
     );
 }
