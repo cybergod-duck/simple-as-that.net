@@ -117,10 +117,10 @@ export default function FeatureSelector({ currentPrice, onComplete }: { currentP
                         <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>AI-generated logo from your business name</p>
                     </div>
                     <span className={`text-xs font-bold uppercase tracking-widest ${runningTotal >= 199 ? (isDark ? 'text-green-400' : 'text-green-600') : (isDark ? 'text-slate-600' : 'text-slate-400')}`}>
-                        {runningTotal >= 199 ? 'Included' : 'Starter+ ($199)'}
+                        {runningTotal >= 199 ? 'Included' : 'Professional+ ($199)'}
                     </span>
                 </div>
-                <div className={`flex items-center gap-4 p-3 rounded-2xl border ${runningTotal >= 499
+                <div className={`flex items-center gap-4 p-3 rounded-2xl border ${runningTotal >= 349
                     ? (isDark ? 'bg-green-900/10 border-green-500/20' : 'bg-green-50 border-green-200')
                     : (isDark ? 'bg-white/[0.01] border-white/5 opacity-40' : 'bg-slate-50 border-slate-100 opacity-40')}`}>
                     <span className="text-2xl">🛡️</span>
@@ -128,8 +128,8 @@ export default function FeatureSelector({ currentPrice, onComplete }: { currentP
                         <h4 className={`font-bold text-sm ${isDark ? 'text-white' : 'text-slate-900'}`}>State Compliance Pack</h4>
                         <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Privacy policy, terms of service, accessibility scanner</p>
                     </div>
-                    <span className={`text-xs font-bold uppercase tracking-widest ${runningTotal >= 499 ? (isDark ? 'text-green-400' : 'text-green-600') : (isDark ? 'text-slate-600' : 'text-slate-400')}`}>
-                        {runningTotal >= 499 ? 'Included' : 'Pro+ ($499)'}
+                    <span className={`text-xs font-bold uppercase tracking-widest ${runningTotal >= 349 ? (isDark ? 'text-green-400' : 'text-green-600') : (isDark ? 'text-slate-600' : 'text-slate-400')}`}>
+                        {runningTotal >= 349 ? 'Included' : 'Business+ ($349)'}
                     </span>
                 </div>
             </div>

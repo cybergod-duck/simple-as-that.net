@@ -67,7 +67,7 @@ const htmlContent = `
             <div class="flex-grow">
                 <h3 class="relative z-10 text-xl font-bold mb-2 text-purple-100">Landing Page</h3>
                 <div class="relative z-10 flex items-baseline gap-1 mb-6">
-                    <span class="text-4xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-cyan-200 to-cyan-500 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)]">$99</span>
+                    <span class="text-4xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-cyan-200 to-cyan-500 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)]">$79</span>
                 </div>
                 <div class="relative z-10 flex items-center justify-between gap-2 py-3 mb-6 border-y -mx-2 px-2 border-purple-500/70 bg-purple-950/80 rounded-lg shadow-inner">
                     <div class="flex flex-col"><span class="text-[9px] font-bold tracking-widest uppercase text-cyan-400 drop-shadow-[0_0_3px_rgba(0,255,255,0.5)]">Speed</span><span class="text-sm font-mono font-bold text-white">0.6s</span></div>
@@ -89,7 +89,7 @@ const htmlContent = `
             <div class="absolute -top-4 left-4 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border bg-purple-900 text-cyan-400 border-cyan-500/50 shadow-[0_0_15px_rgba(0,255,255,0.4)] z-20">Most Popular</div>
             <div class="absolute -inset-2 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none bg-cyan-500/30 -z-10"></div>
             <div class="flex-grow">
-                <h3 class="relative z-10 text-xl font-bold mb-2 text-purple-100">Starter Platform</h3>
+                <h3 class="relative z-10 text-xl font-bold mb-2 text-purple-100">Professional</h3>
                 <div class="relative z-10 flex items-baseline gap-1 mb-6">
                     <span class="text-4xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-cyan-200 to-cyan-500 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)]">$199</span>
                 </div>
@@ -114,9 +114,9 @@ const htmlContent = `
             <div class="absolute -top-4 right-4 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border bg-pink-600 text-white border-pink-400 shadow-[0_0_15px_rgba(255,0,255,0.8)] z-20">Best Value</div>
             <div class="absolute -inset-2 rounded-3xl blur-xl opacity-100 transition-opacity duration-700 pointer-events-none bg-cyan-500/30 -z-10"></div>
             <div class="flex-grow">
-                <h3 class="relative z-10 text-xl font-bold mb-2 text-purple-100">Essential Growth</h3>
+                <h3 class="relative z-10 text-xl font-bold mb-2 text-purple-100">Business</h3>
                 <div class="relative z-10 flex items-baseline gap-1 mb-6">
-                    <span class="text-4xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-cyan-200 to-cyan-500 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)]">$499</span>
+                    <span class="text-4xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-cyan-200 to-cyan-500 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)]">$349</span>
                 </div>
                 <div class="relative z-10 flex items-center justify-between gap-2 py-3 mb-6 border-y -mx-2 px-2 border-purple-500/70 bg-purple-950/80 rounded-lg shadow-inner">
                     <div class="flex flex-col"><span class="text-[9px] font-bold tracking-widest uppercase text-cyan-400 drop-shadow-[0_0_3px_rgba(0,255,255,0.5)]">Speed</span><span class="text-sm font-mono font-bold text-white">0.3s</span></div>
@@ -138,9 +138,9 @@ const htmlContent = `
         <div class="card-entrance flex flex-col justify-between group relative p-6 rounded-2xl cursor-pointer transition-all duration-500 bg-[#2a0e4a] border-2 border-purple-500 hover:bg-[#32115a] hover:border-cyan-400 hover:-translate-y-2 shadow-[0_0_15px_rgba(0,255,255,0.15)] hover:shadow-[0_0_30px_rgba(0,255,255,0.5)]" style="animation-delay: 450ms;">
             <div class="absolute -inset-2 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none bg-cyan-500/30 -z-10"></div>
             <div class="flex-grow">
-                <h3 class="relative z-10 text-xl font-bold mb-2 text-purple-100">Pro Engine</h3>
+                <h3 class="relative z-10 text-xl font-bold mb-2 text-purple-100">Premium</h3>
                 <div class="relative z-10 flex items-baseline gap-1 mb-6">
-                    <span class="text-4xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-cyan-200 to-cyan-500 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)]">$999</span>
+                    <span class="text-4xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-cyan-200 to-cyan-500 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)]">$549</span>
                 </div>
                 <!-- Metrics and lines omitted for brevity... matching structure -->
                 <div class="relative z-10 flex items-center justify-between gap-2 py-3 mb-6 border-y -mx-2 px-2 border-purple-500/70 bg-purple-950/80 rounded-lg shadow-inner">
@@ -163,9 +163,9 @@ const htmlContent = `
         <div class="card-entrance flex flex-col justify-between group relative p-6 rounded-2xl cursor-pointer transition-all duration-500 bg-[#2a0e4a] border-2 border-purple-500 hover:bg-[#32115a] hover:border-cyan-400 hover:-translate-y-2 shadow-[0_0_15px_rgba(0,255,255,0.15)] hover:shadow-[0_0_30px_rgba(0,255,255,0.5)]" style="animation-delay: 600ms;">
             <div class="absolute -inset-2 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none bg-cyan-500/30 -z-10"></div>
             <div class="flex-grow">
-                <h3 class="relative z-10 text-xl font-bold mb-2 text-cyan-300 drop-shadow-[0_0_8px_rgba(0,255,255,0.5)]">Elite Cyber-Arc</h3>
+                <h3 class="relative z-10 text-xl font-bold mb-2 text-cyan-300 drop-shadow-[0_0_8px_rgba(0,255,255,0.5)]">Enterprise</h3>
                 <div class="relative z-10 flex items-baseline gap-1 mb-6">
-                    <span class="text-4xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-cyan-200 to-cyan-500 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)]">$1,999</span>
+                    <span class="text-4xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-cyan-200 to-cyan-500 drop-shadow-[0_0_15px_rgba(0,255,255,0.3)]">$849</span>
                 </div>
                 <div class="relative z-10 flex items-center justify-between gap-2 py-3 mb-6 border-y -mx-2 px-2 border-purple-500/70 bg-purple-950/80 rounded-lg shadow-inner">
                     <div class="flex flex-col"><span class="text-[9px] font-bold tracking-widest uppercase text-cyan-400 drop-shadow-[0_0_3px_rgba(0,255,255,0.5)]">Speed</span><span class="text-sm font-mono font-bold text-white">0.1s</span></div>

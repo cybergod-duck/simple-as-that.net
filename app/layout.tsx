@@ -12,7 +12,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
     title: 'Simple As That | Beautiful Websites for Small Business — Website Design 2026',
-    description: 'We build beautiful, fast websites for small businesses. AI-powered design, instant deployment, starting at $99. Get your business online today.',
+    description: 'We build beautiful, fast websites for small businesses. AI-powered design, instant deployment, starting at $79. Get your business online today.',
     keywords: ['website design', 'small business website', 'web design 2026', 'affordable website', 'website builder', 'AI website', 'simple as that'],
     metadataBase: new URL('https://simple-as-that.net'),
     alternates: {
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: 'Simple As That | Beautiful Websites for Small Business',
-        description: 'AI-powered website design for small businesses. Tell us what you need, we build it — starting at $99.',
+        description: 'AI-powered website design for small businesses. Tell us what you need, we build it — starting at $79.',
         url: 'https://simple-as-that.net',
         siteName: 'Simple As That',
         type: 'website',
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     twitter: {
         card: 'summary_large_image',
         title: 'Simple As That | Website Design for Small Business',
-        description: 'AI-powered website design starting at $99. Beautiful, fast, deployed today.',
+        description: 'AI-powered website design starting at $79. Beautiful, fast, deployed today.',
     },
     robots: {
         index: true,

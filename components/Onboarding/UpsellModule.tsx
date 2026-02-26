@@ -13,12 +13,12 @@ export default function UpsellModule({
     const { theme } = useTheme();
     const [mounted, setMounted] = useState(false);
 
-    // Auto-include for Elite tier logic
-    const isElite = selectedPlan === 'elite';
+    // Auto-include for Enterprise tier logic
+    const isEnterprise = selectedPlan === 'enterprise';
 
     const [addons, setAddons] = useState({
-        logo: isElite,
-        compliance: isElite,
+        logo: isEnterprise,
+        compliance: isEnterprise,
         hosting: false
     });
 
@@ -31,8 +31,8 @@ export default function UpsellModule({
     const isDark = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
     const toggleAddon = (key: keyof typeof addons) => {
-        // Prevent un-toggling if included in Elite
-        if (isElite && (key === 'logo' || key === 'compliance')) return;
+        // Prevent un-toggling if included in Enterprise
+        if (isEnterprise && (key === 'logo' || key === 'compliance')) return;
         setAddons(prev => ({ ...prev, [key]: !prev[key] }));
     };
 
@@ -67,7 +67,7 @@ export default function UpsellModule({
                             : (isDark
                                 ? 'bg-black/40 border-white/10 hover:border-white/30 hover:bg-black/60'
                                 : 'bg-white/80 border-slate-200 hover:border-slate-300 shadow-sm')
-                        } ${isElite ? 'cursor-default' : ''}`}
+                        } ${isEnterprise ? 'cursor-default' : ''}`}
                 >
                     {/* Background Glow */}
                     {addons.logo && <div className={`absolute inset-0 opacity-50 blur-2xl pointer-events-none transition-opacity ${isDark ? 'bg-gradient-to-r from-cyan-500/20 to-transparent' : 'bg-gradient-to-r from-cyan-500/10 to-transparent'}`}></div>}
@@ -87,15 +87,15 @@ export default function UpsellModule({
                                 <h3 className={`text-xl font-black tracking-tight ${addons.logo ? (isDark ? 'text-white' : 'text-slate-900') : (isDark ? 'text-slate-300' : 'text-slate-700')}`}>
                                     Custom Semantic Logo
                                 </h3>
-                                {isElite && (
+                                {isEnterprise && (
                                     <span className="inline-block mt-1 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-cyan-500/20 text-cyan-400 border border-cyan-500/50">
-                                        Included in Elite
+                                        Included in Enterprise
                                     </span>
                                 )}
                             </div>
                             <div className="flex items-center justify-center md:justify-end gap-3">
-                                <span className={`text-2xl font-black ${addons.logo && !isElite ? (isDark ? 'text-cyan-400' : 'text-cyan-600') : (isDark ? 'text-slate-400' : 'text-slate-500')}`}>
-                                    {isElite ? '$0' : '$50'}
+                                <span className={`text-2xl font-black ${addons.logo && !isEnterprise ? (isDark ? 'text-cyan-400' : 'text-cyan-600') : (isDark ? 'text-slate-400' : 'text-slate-500')}`}>
+                                    {isEnterprise ? '$0' : '$50'}
                                 </span>
                                 <span className={`text-xs font-bold uppercase tracking-widest ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>One-Time</span>
                             </div>
@@ -106,7 +106,7 @@ export default function UpsellModule({
                     </div>
 
                     {/* Checkbox */}
-                    {!isElite && (
+                    {!isEnterprise && (
                         <div className={`shrink-0 w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all z-10
                             ${addons.logo
                                 ? (isDark ? 'bg-cyan-500 border-cyan-400 text-black shadow-[0_0_15px_rgba(0,255,255,0.5)]' : 'bg-cyan-500 border-cyan-600 text-white')
@@ -127,7 +127,7 @@ export default function UpsellModule({
                             : (isDark
                                 ? 'bg-black/40 border-white/10 hover:border-white/30 hover:bg-black/60'
                                 : 'bg-white/80 border-slate-200 hover:border-slate-300 shadow-sm')
-                        } ${isElite ? 'cursor-default' : ''}`}
+                        } ${isEnterprise ? 'cursor-default' : ''}`}
                 >
                     {addons.compliance && <div className={`absolute inset-0 opacity-50 blur-2xl pointer-events-none transition-opacity ${isDark ? 'bg-gradient-to-r from-purple-500/20 to-transparent' : 'bg-gradient-to-r from-purple-500/10 to-transparent'}`}></div>}
 
@@ -144,15 +144,15 @@ export default function UpsellModule({
                                 <h3 className={`text-xl font-black tracking-tight ${addons.compliance ? (isDark ? 'text-white' : 'text-slate-900') : (isDark ? 'text-slate-300' : 'text-slate-700')}`}>
                                     State Compliance Pack (DoFollow Badge)
                                 </h3>
-                                {isElite && (
+                                {isEnterprise && (
                                     <span className="inline-block mt-1 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-purple-500/20 text-purple-400 border border-purple-500/50">
-                                        Included in Elite First Year
+                                        Included in Enterprise First Year
                                     </span>
                                 )}
                             </div>
                             <div className="flex items-center justify-center md:justify-end gap-3">
-                                <span className={`text-2xl font-black ${addons.compliance && !isElite ? (isDark ? 'text-purple-400' : 'text-purple-600') : (isDark ? 'text-slate-400' : 'text-slate-500')}`}>
-                                    {isElite ? '$0' : '$30'}
+                                <span className={`text-2xl font-black ${addons.compliance && !isEnterprise ? (isDark ? 'text-purple-400' : 'text-purple-600') : (isDark ? 'text-slate-400' : 'text-slate-500')}`}>
+                                    {isEnterprise ? '$0' : '$30'}
                                 </span>
                                 <span className={`text-xs font-bold uppercase tracking-widest ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>/ month</span>
                             </div>
@@ -162,7 +162,7 @@ export default function UpsellModule({
                         </p>
                     </div>
 
-                    {!isElite && (
+                    {!isEnterprise && (
                         <div className={`shrink-0 w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all z-10
                             ${addons.compliance
                                 ? (isDark ? 'bg-purple-500 border-purple-400 text-black shadow-[0_0_15px_rgba(168,85,247,0.5)]' : 'bg-purple-600 border-purple-500 text-white')

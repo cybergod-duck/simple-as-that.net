@@ -3,28 +3,83 @@
 import { useState } from 'react';
 import { useTheme } from 'next-themes';
 
-function generatePalettes(picks: string[]): string[][] {
-    const palettes: string[][] = [];
-    for (let p = 0; p < 3; p++) {
-        const palette: string[] = [...picks];
-        const seed = Date.now() + p * 1000 + Math.random() * 999;
-        for (let i = 0; i < 3 + Math.floor(Math.random() * 3); i++) {
-            const base = picks[Math.floor((seed + i) % picks.length)];
-            const r = parseInt(base.slice(1, 3), 16);
-            const g = parseInt(base.slice(3, 5), 16);
-            const b = parseInt(base.slice(5, 7), 16);
-            const shift = (30 + i * 20) * (p % 2 === 0 ? 1 : -1);
-            const nr = Math.min(255, Math.max(0, r + shift));
-            const ng = Math.min(255, Math.max(0, g + shift));
-            const nb = Math.min(255, Math.max(0, b + shift));
-            palette.push(`#${nr.toString(16).padStart(2, '0')}${ng.toString(16).padStart(2, '0')}${nb.toString(16).padStart(2, '0')}`);
-        }
-        palettes.push(palette.slice(0, 8));
+/* ── HSL-based palette generation ─────────────────────────── */
+function hexToHsl(hex: string): [number, number, number] {
+    const r = parseInt(hex.slice(1, 3), 16) / 255;
+    const g = parseInt(hex.slice(3, 5), 16) / 255;
+    const b = parseInt(hex.slice(5, 7), 16) / 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h = 0, s = 0;
+    const l = (max + min) / 2;
+    if (max !== min) {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+        else if (max === g) h = ((b - r) / d + 2) / 6;
+        else h = ((r - g) / d + 4) / 6;
     }
+    return [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
+}
+
+function hslToHex(h: number, s: number, l: number): string {
+    h = ((h % 360) + 360) % 360;
+    s = Math.max(0, Math.min(100, s)) / 100;
+    l = Math.max(0, Math.min(100, l)) / 100;
+    const a = s * Math.min(l, 1 - l);
+    const f = (n: number) => {
+        const k = (n + h / 30) % 12;
+        const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+        return Math.round(255 * color).toString(16).padStart(2, '0');
+    };
+    return `#${f(0)}${f(8)}${f(4)}`;
+}
+
+function generatePalettes(picks: string[]): string[][] {
+    const hslPicks = picks.map(hexToHsl);
+    const palettes: string[][] = [];
+
+    // Strategy 1: Analogous (close hues, varied lightness)
+    const p1: string[] = [];
+    hslPicks.forEach(([h, s, l]) => {
+        p1.push(hslToHex(h, s, l));
+        p1.push(hslToHex(h + 15, Math.min(100, s + 10), Math.max(10, l - 15)));
+    });
+    p1.push(hslToHex(hslPicks[0][0], 15, 95)); // near-white
+    p1.push(hslToHex(hslPicks[0][0], 20, 10)); // near-black
+    palettes.push(p1.slice(0, 8));
+
+    // Strategy 2: Triadic (120° apart, vibrant)
+    const p2: string[] = [];
+    const baseH = hslPicks[0][0];
+    [0, 120, 240].forEach(offset => {
+        const h = baseH + offset;
+        p2.push(hslToHex(h, 70, 50));
+        p2.push(hslToHex(h, 40, 75));
+    });
+    p2.push(hslToHex(baseH, 10, 97));
+    p2.push(hslToHex(baseH, 15, 8));
+    palettes.push(p2.slice(0, 8));
+
+    // Strategy 3: Complementary (opposite hues, high contrast)
+    const p3: string[] = [];
+    hslPicks.forEach(([h, s, l]) => {
+        p3.push(hslToHex(h, s, l));
+        p3.push(hslToHex(h + 180, Math.min(100, s + 5), l));
+    });
+    p3.push(hslToHex(hslPicks[1][0] + 90, 30, 85));
+    p3.push(hslToHex(hslPicks[2][0], 25, 12));
+    palettes.push(p3.slice(0, 8));
+
     return palettes;
 }
 
-export default function ColorPalettePicker({ onComplete }: { onComplete: (palette: string[]) => void }) {
+/* ── Component ────────────────────────────────────────────── */
+type Props = {
+    onSelect: (palette: string[]) => void;
+    onColorsChange: (colors: string[]) => void;
+};
+
+export default function ColorPalettePicker({ onSelect, onColorsChange }: Props) {
     const { theme } = useTheme();
     const [colors, setColors] = useState(['#7c3aed', '#06b6d4', '#f43f5e']);
     const [phase, setPhase] = useState<'pick' | 'choose'>('pick');
@@ -32,126 +87,72 @@ export default function ColorPalettePicker({ onComplete }: { onComplete: (palett
 
     const isDark = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
-    const updateColor = (index: number, value: string) => {
+    const updateColor = (i: number, val: string) => {
         const next = [...colors];
-        next[index] = value;
+        next[i] = val;
         setColors(next);
+        onColorsChange(next);
     };
 
-    const generateAndAdvance = () => {
+    const generate = () => {
         setPalettes(generatePalettes(colors));
         setPhase('choose');
-    };
-
-    const regenerate = () => {
-        setPalettes(generatePalettes(colors));
     };
 
     const labels = ['Primary', 'Secondary', 'Accent'];
 
     if (phase === 'pick') {
         return (
-            <div className="animate-fade-in space-y-10 w-full max-w-2xl mx-auto">
-                <div className="text-center md:text-left">
-                    <h2 className={`text-4xl md:text-5xl font-black tracking-tighter mb-4 ${isDark ? 'text-white' : 'text-slate-900'}`}>Pick 3 Colors.</h2>
-                    <p className={`text-lg font-light tracking-wide ${isDark ? 'text-purple-200/60' : 'text-slate-500'}`}>
-                        Choose colors that feel right for your brand. We'll build palettes from them.
-                    </p>
+            <div className="space-y-6">
+                <div>
+                    <h3 className={`text-lg font-black tracking-tight mb-1 ${isDark ? 'text-white' : 'text-slate-900'}`}>Pick 3 Colors</h3>
+                    <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Choose colors that feel right for your brand.</p>
                 </div>
-
-                {/* 3 Color Wheels */}
-                <div className="grid grid-cols-3 gap-8">
-                    {colors.map((color, i) => (
-                        <div key={i} className="flex flex-col items-center gap-4">
-                            <label className={`text-xs font-bold uppercase tracking-widest ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{labels[i]}</label>
+                <div className="flex gap-6 justify-center">
+                    {colors.map((c, i) => (
+                        <div key={i} className="flex flex-col items-center gap-2">
+                            <span className={`text-[10px] font-bold uppercase tracking-widest ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{labels[i]}</span>
                             <div className="relative">
-                                {/* Glow effect behind the picker */}
-                                <div className="absolute -inset-3 rounded-full blur-xl opacity-40" style={{ backgroundColor: color }}></div>
-                                <input
-                                    type="color"
-                                    value={color}
-                                    onChange={(e) => updateColor(i, e.target.value)}
-                                    className="relative w-24 h-24 md:w-32 md:h-32 rounded-full cursor-pointer border-4 transition-all hover:scale-105"
-                                    style={{ borderColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)' }}
-                                />
+                                <div className="absolute -inset-2 rounded-full blur-lg opacity-30" style={{ backgroundColor: c }}></div>
+                                <input type="color" value={c} onChange={e => updateColor(i, e.target.value)}
+                                    className="relative w-16 h-16 rounded-full cursor-pointer border-2"
+                                    style={{ borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }} />
                             </div>
-                            <span className={`font-mono text-xs font-bold uppercase ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{color}</span>
+                            <span className={`font-mono text-[10px] ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>{c}</span>
                         </div>
                     ))}
                 </div>
-
-                {/* Live preview strip */}
-                <div className="space-y-3">
-                    <span className={`text-xs font-bold uppercase tracking-widest ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Preview</span>
-                    <div className="flex rounded-2xl overflow-hidden h-16 shadow-lg">
-                        {colors.map((c, i) => (
-                            <div key={i} className="flex-1 transition-colors duration-300" style={{ backgroundColor: c }}></div>
-                        ))}
-                    </div>
+                <div className="flex rounded-xl overflow-hidden h-8">
+                    {colors.map((c, i) => <div key={i} className="flex-1" style={{ backgroundColor: c }} />)}
                 </div>
-
-                <div className="flex justify-center pt-4">
-                    <button onClick={generateAndAdvance} className={`px-12 py-5 rounded-2xl font-bold tracking-widest uppercase transition-all border ${isDark
-                        ? 'bg-purple-900/80 border-purple-500/50 hover:border-cyan-400 text-white shadow-[0_0_20px_rgba(168,85,247,0.3)]'
-                        : 'bg-purple-600 border-purple-500 hover:border-cyan-300 text-white shadow-lg'}`}>
-                        Generate Palettes →
-                    </button>
-                </div>
+                <button onClick={generate} className={`w-full py-3 rounded-xl font-bold text-xs uppercase tracking-widest border transition-all ${isDark
+                    ? 'bg-purple-900/60 border-purple-500/40 text-white hover:border-cyan-400'
+                    : 'bg-purple-600 border-purple-500 text-white hover:border-cyan-300'}`}>
+                    Generate Palettes →
+                </button>
             </div>
         );
     }
 
-    // Phase: choose palette
     return (
-        <div className="animate-fade-in space-y-8 w-full max-w-4xl mx-auto">
-            <div className="text-center md:text-left">
-                <h2 className={`text-4xl md:text-5xl font-black tracking-tighter mb-4 ${isDark ? 'text-white' : 'text-slate-900'}`}>Your Palettes.</h2>
-                <p className={`text-lg font-light tracking-wide ${isDark ? 'text-purple-200/60' : 'text-slate-500'}`}>
-                    3 color schemes from your picks. Choose one, or regenerate.
-                </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-6">
-                {palettes.map((palette, pi) => (
-                    <button
-                        key={pi}
-                        onClick={() => onComplete(palette)}
-                        className={`group p-6 rounded-3xl border transition-all duration-300 hover:-translate-y-2 text-left ${isDark
-                            ? 'bg-white/[0.03] border-purple-500/20 hover:border-cyan-400/50 hover:shadow-[0_0_30px_rgba(0,255,255,0.15)]'
-                            : 'bg-white/80 border-purple-200 hover:border-cyan-400 hover:shadow-xl shadow-sm'}`}
-                    >
-                        {/* Mini mockup */}
-                        <div className="rounded-xl overflow-hidden mb-4 border border-white/10" style={{ backgroundColor: palette[0] }}>
-                            <div className="p-4 space-y-2">
-                                <div className="h-3 w-20 rounded" style={{ backgroundColor: palette[1] }}></div>
-                                <div className="h-2 w-32 rounded opacity-60" style={{ backgroundColor: palette[1] }}></div>
-                                <div className="h-8 w-24 rounded-lg mt-3" style={{ backgroundColor: palette[2] }}></div>
-                            </div>
+        <div className="space-y-4">
+            <h3 className={`text-lg font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>Your Palettes</h3>
+            <div className="space-y-3">
+                {palettes.map((pal, pi) => (
+                    <button key={pi} onClick={() => onSelect(pal)}
+                        className={`w-full p-3 rounded-xl border transition-all text-left flex items-center gap-3 ${isDark
+                            ? 'bg-white/[0.02] border-white/10 hover:border-cyan-400/50'
+                            : 'bg-white/80 border-slate-200 hover:border-purple-400'}`}>
+                        <div className="flex gap-1">
+                            {pal.map((c, ci) => <div key={ci} className="w-6 h-6 rounded-full border border-white/10" style={{ backgroundColor: c }} />)}
                         </div>
-                        {/* Color dots */}
-                        <div className="flex gap-2">
-                            {palette.map((c, ci) => (
-                                <div key={ci} className="w-6 h-6 rounded-full border border-white/10 shadow-sm" style={{ backgroundColor: c }}></div>
-                            ))}
-                        </div>
-                        <p className={`mt-3 text-xs font-bold uppercase tracking-widest ${isDark ? 'text-slate-500 group-hover:text-cyan-400' : 'text-slate-400 group-hover:text-purple-600'}`}>
-                            Option {pi + 1}
-                        </p>
+                        <span className={`text-xs font-bold uppercase tracking-widest ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Option {pi + 1}</span>
                     </button>
                 ))}
             </div>
-
-            <div className="flex items-center justify-center gap-4">
-                <button onClick={regenerate} className={`px-8 py-3 rounded-2xl font-bold text-sm uppercase tracking-widest transition-all border ${isDark
-                    ? 'text-slate-400 border-white/10 hover:border-cyan-400/50 hover:text-cyan-400'
-                    : 'text-slate-500 border-slate-200 hover:border-purple-400 hover:text-purple-600'}`}>
-                    🔄 Regenerate
-                </button>
-                <button onClick={() => { setPhase('pick'); }} className={`px-8 py-3 rounded-2xl font-bold text-sm uppercase tracking-widest transition-all border ${isDark
-                    ? 'text-slate-500 border-white/5 hover:border-white/20 hover:text-white'
-                    : 'text-slate-400 border-slate-100 hover:border-slate-300 hover:text-slate-600'}`}>
-                    ← Change Colors
-                </button>
+            <div className="flex gap-2">
+                <button onClick={() => setPalettes(generatePalettes(colors))} className={`flex-1 py-2 rounded-xl text-xs font-bold border ${isDark ? 'border-white/10 text-slate-400 hover:text-cyan-400' : 'border-slate-200 text-slate-500 hover:text-purple-600'}`}>🔄 Regenerate</button>
+                <button onClick={() => setPhase('pick')} className={`flex-1 py-2 rounded-xl text-xs font-bold border ${isDark ? 'border-white/5 text-slate-600 hover:text-white' : 'border-slate-100 text-slate-400 hover:text-slate-600'}`}>← Change</button>
             </div>
         </div>
     );

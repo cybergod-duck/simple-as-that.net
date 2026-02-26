@@ -16,10 +16,10 @@ const QUESTIONS: { key: keyof DesignChoices; label: string; subtitle: string; op
     {
         key: 'pages', label: 'How many pages?', subtitle: 'This sets the foundation of your site.',
         options: [
-            { id: '1', label: '1 Page', icon: '📄', desc: 'A single landing page', price: 99 },
+            { id: '1', label: '1 Page', icon: '📄', desc: 'A single landing page', price: 79 },
             { id: '3', label: '3 Pages', icon: '📑', desc: 'Home, About, Contact', price: 199 },
-            { id: '5', label: '5+ Pages', icon: '📚', desc: 'Full multi-page site', price: 499 },
-            { id: 'unlimited', label: 'Unlimited', icon: '🏗️', desc: 'No limits on pages', price: 999 },
+            { id: '5', label: '5+ Pages', icon: '📚', desc: 'Full multi-page site', price: 349 },
+            { id: 'unlimited', label: 'Unlimited', icon: '🏗️', desc: 'No limits on pages', price: 849 },
         ]
     },
     {
@@ -80,7 +80,7 @@ export default function DesignPreferences({ currentPrice, onComplete }: { curren
 
         // For pages, the price IS the base (not additive)
         if (q.key === 'pages') {
-            newPrice = price - 99; // subtract base $99
+            newPrice = price - 79; // subtract base $79
         } else {
             newPrice += price;
         }

@@ -88,7 +88,7 @@ export default function Home() {
           "name": "Simple As That",
           "url": "https://simple-as-that.net",
           "logo": "https://simple-as-that.net/favicon_io/apple-touch-icon.png",
-          "description": "AI-powered website design for small businesses. Beautiful, fast websites starting at $99.",
+          "description": "AI-powered website design for small businesses. Beautiful, fast websites starting at $79.",
           "founder": { "@type": "Person", "name": "Timothy Chappell", "sameAs": "https://www.linkedin.com/in/timothy-chappell-bb311b390/" },
           "parentOrganization": { "@type": "Organization", "name": "Voss Neural Research LLC" },
           "contactPoint": { "@type": "ContactPoint", "email": "create@simple-as-that.net", "contactType": "sales" },
@@ -100,36 +100,15 @@ export default function Home() {
           "@context": "https://schema.org",
           "@type": "FAQPage",
           "mainEntity": [
-            { "@type": "Question", "name": "How much does a website cost for a small business?", "acceptedAnswer": { "@type": "Answer", "text": "Our plans start at $99 for a single landing page, $199 for a 3-page Starter site, $499 for a full Pro site with 5+ pages, and $999 for an unlimited Elite package. All plans include hosting at $29/month." } },
+            { "@type": "Question", "name": "How much does a website cost for a small business?", "acceptedAnswer": { "@type": "Answer", "text": "Our plans start at $79 for a single Landing Page, $199 for a Professional site, $349 for a Business site with 5+ pages, $549 for a Premium package, and $849 for a full Enterprise package. All plans include hosting and Simple AI+ at $29/month." } },
             { "@type": "Question", "name": "How long does it take to build a website?", "acceptedAnswer": { "@type": "Answer", "text": "Most websites are built and deployed within 24-48 hours after you complete our onboarding questionnaire. Complex sites with e-commerce or custom features may take 3-5 business days." } },
             { "@type": "Question", "name": "Do I need a domain name?", "acceptedAnswer": { "@type": "Answer", "text": "We help you find and register the perfect domain during onboarding. You can also bring your own domain and we'll map it for you at no extra cost." } },
             { "@type": "Question", "name": "What is included in a website package?", "acceptedAnswer": { "@type": "Answer", "text": "Every package includes a contact form, basic SEO, mobile-responsive design, and dark/light mode support. Higher tiers add features like AI chatbot, blog, booking system, e-commerce, custom logo, and state compliance packs." } },
-            { "@type": "Question", "name": "Can I update my website myself?", "acceptedAnswer": { "@type": "Answer", "text": "Yes! Our dashboard gives you access to update content, images, and settings. For Pro and Elite plans, you can also manage your blog, testimonials, and product listings directly." } }
+            { "@type": "Question", "name": "Can I update my website myself?", "acceptedAnswer": { "@type": "Answer", "text": "Yes! Our dashboard gives you access to update content, images, and settings. For Premium and Enterprise plans, you can also manage your blog, testimonials, and product listings directly." } }
           ]
         })
       }} />
 
-      {/* FAQ Section (visible) */}
-      <section className={`relative z-10 w-full max-w-3xl px-6 mt-16 mb-12 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
-        <h2 className={`text-2xl font-black tracking-tighter mb-8 text-center ${isDark ? 'text-white' : 'text-slate-900'}`}>Frequently Asked Questions</h2>
-        <div className="space-y-4">
-          {[
-            { q: 'How much does a website cost?', a: 'Plans start at $99 for a landing page, up to $999 for an unlimited Elite package. All include $29/mo hosting.' },
-            { q: 'How long does it take?', a: 'Most sites deploy in 24-48 hours. Complex builds with e-commerce take 3-5 business days.' },
-            { q: 'Do I need a domain name?', a: "We help you find one during onboarding, or bring your own — we'll map it for free." },
-            { q: "What's included?", a: 'Contact form, SEO, mobile design, and dark/light mode in every plan. Higher tiers add AI chatbot, blog, booking, and more.' },
-            { q: 'Can I update it myself?', a: 'Yes! Our dashboard lets you edit content, images, and settings. Pro+ plans include blog and product management.' },
-          ].map((faq, i) => (
-            <details key={i} className={`group rounded-2xl border p-5 transition-colors ${isDark ? 'bg-white/[0.02] border-purple-500/15 hover:border-purple-500/30' : 'bg-white/80 border-slate-200 hover:border-purple-300'}`}>
-              <summary className={`cursor-pointer font-bold text-sm list-none flex items-center justify-between ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                {faq.q}
-                <span className={`text-lg transition-transform group-open:rotate-45 ${isDark ? 'text-cyan-400' : 'text-purple-500'}`}>+</span>
-              </summary>
-              <p className={`mt-3 text-sm leading-relaxed ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{faq.a}</p>
-            </details>
-          ))}
-        </div>
-      </section>
 
     </div>
   );

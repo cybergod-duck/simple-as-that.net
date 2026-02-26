@@ -93,7 +93,7 @@ export default function LivePreview({ businessName, palette, design, features, t
     const cardRadius = design.borders === 'pill' ? '24px' : design.borders === 'sharp' ? '4px' : '16px';
     const shadow = design.shadows === 'heavy' ? '0 20px 60px rgba(0,0,0,0.4)' : design.shadows === 'subtle' ? '0 4px 20px rgba(0,0,0,0.15)' : 'none';
 
-    const tier = totalPrice >= 999 ? 'Elite' : totalPrice >= 499 ? 'Pro' : totalPrice >= 199 ? 'Starter' : 'Landing';
+    const tier = totalPrice >= 849 ? 'Enterprise' : totalPrice >= 549 ? 'Premium' : totalPrice >= 349 ? 'Business' : totalPrice >= 199 ? 'Professional' : 'Landing Page';
 
     // Simulated domains
     const slug = businessName.toLowerCase().replace(/[^a-z0-9]/g, '');

@@ -7,7 +7,7 @@ const TIERS = [
     {
         id: 'landing',
         name: 'Landing Page',
-        price: '$99',
+        price: '$79',
         tagline: 'Perfect for getting started',
         features: [
             '1-page website, mobile-friendly',
@@ -18,8 +18,8 @@ const TIERS = [
         preview: '/templates/contractor.png',
     },
     {
-        id: 'starter',
-        name: 'Starter',
+        id: 'professional',
+        name: 'Professional',
         price: '$199',
         isPopular: true,
         tagline: 'Most popular for new businesses',
@@ -33,9 +33,9 @@ const TIERS = [
         preview: '/templates/restaurant.png',
     },
     {
-        id: 'essential',
-        name: 'Essential',
-        price: '$499',
+        id: 'business',
+        name: 'Business',
+        price: '$349',
         isBestValue: true,
         tagline: 'Built to grow your business',
         features: [
@@ -49,9 +49,9 @@ const TIERS = [
         preview: '/templates/restaurant.png',
     },
     {
-        id: 'pro',
-        name: 'Pro',
-        price: '$999',
+        id: 'premium',
+        name: 'Premium',
+        price: '$549',
         tagline: 'For serious growth',
         features: [
             'Up to 10 pages, fully custom',
@@ -64,9 +64,9 @@ const TIERS = [
         preview: '/templates/contractor.png',
     },
     {
-        id: 'elite',
-        name: 'Elite',
-        price: '$1,999',
+        id: 'enterprise',
+        name: 'Enterprise',
+        price: '$849',
         tagline: 'The complete package',
         features: [
             'Unlimited pages, premium design',
@@ -94,9 +94,9 @@ export default function TemplateRecommendations({ industry, budget, onComplete }
     const isDark = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
     const budgetMap: Record<string, string[]> = {
-        starter: ['landing', 'starter'],
-        mid: ['essential', 'pro'],
-        premium: ['elite'],
+        starter: ['landing', 'professional'],
+        mid: ['business', 'premium'],
+        premium: ['enterprise'],
     };
     const filteredTiers = budget && budgetMap[budget] ? TIERS.filter(t => budgetMap[budget].includes(t.id)) : TIERS;
 
