@@ -1,7 +1,5 @@
 'use client';
 
-import { useTheme } from 'next-themes';
-
 type MockupProps = {
     businessName: string;
     palette: string[];
@@ -15,124 +13,197 @@ type MockupProps = {
         hero: string;
     };
     features: string[];
+    tier: string;
 };
 
-export default function LiveMockup({ businessName, palette, design, features }: MockupProps) {
-    const { theme } = useTheme();
+export default function LiveMockup({ businessName, palette, design, features, tier }: MockupProps) {
+    const primary = palette[0] || '#7c3aed';
+    const accent = palette[1] || '#06b6d4';
+    const pop = palette[2] || '#f43f5e';
 
-    const bg = palette[0] || '#0d0521';
-    const text = palette[1] || '#ffffff';
-    const accent = palette[2] || '#06b6d4';
-    const secondary = palette[3] || palette[0] || '#1a0a3e';
-    const surface = palette[4] || palette[0] || '#130833';
-    const muted = palette[5] || '#666666';
+    const bg = design.mode === 'light' ? '#ffffff' : '#0a0118';
+    const surface = design.mode === 'light' ? '#f8fafc' : '#110827';
+    const text = design.mode === 'light' ? '#0f172a' : '#f1f5f9';
+    const muted = design.mode === 'light' ? '#64748b' : '#64748b';
+    const border = design.mode === 'light' ? '#e2e8f0' : 'rgba(255,255,255,0.06)';
 
-    const borderRadius = design.borders === 'pill' ? '9999px' : design.borders === 'sharp' ? '0px' : '16px';
-    const cardRadius = design.borders === 'pill' ? '24px' : design.borders === 'sharp' ? '4px' : '12px';
-    const shadow = design.shadows === 'heavy' ? `0 12px 40px ${accent}25` : design.shadows === 'subtle' ? `0 4px 15px rgba(0,0,0,0.15)` : 'none';
-    const cardShadow = design.shadows === 'heavy' ? `0 8px 25px ${accent}15` : design.shadows === 'subtle' ? '0 2px 10px rgba(0,0,0,0.1)' : 'none';
-
-    const navItems = design.pages === '1' ? ['Home'] : design.pages === '3' ? ['Home', 'About', 'Contact'] : design.pages === '5' ? ['Home', 'About', 'Services', 'Trust', 'Contact'] : ['Home', 'About', 'Services', 'Trust', 'Contact', 'Blog'];
+    const br = design.borders === 'pill' ? '20px' : design.borders === 'sharp' ? '4px' : '12px';
+    const cardBr = design.borders === 'pill' ? '16px' : design.borders === 'sharp' ? '2px' : '8px';
+    const shadow = design.shadows === 'heavy'
+        ? `0 20px 60px ${primary}20, 0 4px 20px rgba(0,0,0,0.3)`
+        : design.shadows === 'subtle' ? '0 4px 20px rgba(0,0,0,0.15)' : 'none';
 
     const name = businessName || 'Your Business';
+    const slug = name.toLowerCase().replace(/[^a-z0-9]/g, '') || 'yourbusiness';
+    const navItems = design.pages === '1' ? ['Home'] : design.pages === '3' ? ['Home', 'About', 'Contact'] : design.pages === '5' ? ['Home', 'About', 'Services', 'Trust', 'Contact'] : ['Home', 'About', 'Services', 'Trust', 'Contact', 'Blog'];
+
+    const showBlog = features.includes('blog') || tier === 'Enterprise';
+    const showEcom = features.includes('ecommerce') || tier === 'Premium' || tier === 'Enterprise';
+    const showTestimonials = features.includes('testimonials') || ['Business', 'Premium', 'Enterprise'].includes(tier);
 
     return (
-        <div className="rounded-2xl overflow-hidden text-left transition-all duration-500" style={{ backgroundColor: bg, boxShadow: shadow, border: `1px solid ${accent}15` }}>
+        <div className="relative group flex-1 flex flex-col">
+            {/* Glow behind browser */}
+            <div className="absolute -inset-4 rounded-3xl opacity-40 blur-2xl transition-all duration-700"
+                style={{ background: `radial-gradient(ellipse at center, ${primary}30, ${accent}15, transparent 70%)` }} />
 
-            {/* Nav bar */}
-            <div className="flex items-center justify-between px-4 py-2.5" style={{ borderBottom: `1px solid ${accent}10` }}>
-                <span className="font-black text-xs" style={{ color: text }}>{name}</span>
-                <div className="flex gap-2">
-                    {navItems.map(n => (
-                        <span key={n} className="text-[8px] font-bold uppercase tracking-widest" style={{ color: text, opacity: 0.35 }}>{n}</span>
-                    ))}
+            {/* Browser Chrome Frame */}
+            <div className="relative rounded-xl overflow-hidden flex flex-col flex-1" style={{
+                boxShadow: `0 25px 80px rgba(0,0,0,0.5), 0 0 40px ${primary}10, inset 0 1px 0 rgba(255,255,255,0.05)`,
+                border: '1px solid rgba(255,255,255,0.08)',
+            }}>
+                {/* Title Bar */}
+                <div className="flex items-center px-3 py-2 gap-2" style={{
+                    background: 'linear-gradient(180deg, #2a2a2e 0%, #1e1e22 100%)',
+                    borderBottom: '1px solid rgba(255,255,255,0.04)',
+                }}>
+                    {/* Traffic lights */}
+                    <div className="flex gap-1.5 shrink-0">
+                        <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f57] shadow-[inset_0_-1px_1px_rgba(0,0,0,0.2)]" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-[#febc2e] shadow-[inset_0_-1px_1px_rgba(0,0,0,0.2)]" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-[#28c840] shadow-[inset_0_-1px_1px_rgba(0,0,0,0.2)]" />
+                    </div>
+                    {/* URL Bar */}
+                    <div className="flex-1 flex items-center justify-center px-3 py-1 rounded-md mx-8" style={{
+                        background: 'rgba(0,0,0,0.3)',
+                        border: '1px solid rgba(255,255,255,0.06)',
+                    }}>
+                        <span className="text-[9px] font-mono text-slate-500 select-none">
+                            <span className="text-green-400/60">🔒</span> https://{slug}.com
+                        </span>
+                    </div>
                 </div>
-            </div>
 
-            {/* Hero section - varies by hero type */}
-            <div className="relative p-5" style={{ minHeight: '100px' }}>
-                {design.hero === 'video' && (
-                    <div className="absolute inset-0 opacity-20" style={{ background: `linear-gradient(135deg, ${accent}40, ${secondary}40)` }} />
-                )}
-                {design.hero === '3d' && (
-                    <div className="absolute right-4 top-4 w-20 h-16 rounded-lg opacity-60" style={{ backgroundColor: accent + '20', border: `1px solid ${accent}30`, transform: 'perspective(300px) rotateY(-15deg)' }} />
-                )}
-                <div className={`relative ${design.layout === 'split' ? 'flex gap-4 items-center' : ''}`}>
-                    <div className="flex-1">
-                        <h3 className="text-base font-black leading-tight mb-1" style={{ color: text }}>{name}</h3>
-                        <p className="text-[9px] mb-3 leading-relaxed" style={{ color: text, opacity: 0.45 }}>We deliver exceptional service tailored to your needs.</p>
-                        {(design.hero === 'floating-form' || design.hero === '3d') && (
-                            <div className="flex gap-1 mb-2">
-                                <div className="flex-1 h-5 rounded text-[7px] px-2 flex items-center" style={{ backgroundColor: surface + '60', border: `1px solid ${accent}15`, color: muted }}>your@email.com</div>
-                                <div className="px-3 h-5 rounded text-[7px] font-bold flex items-center" style={{ backgroundColor: accent, color: bg, borderRadius }}>Go</div>
+                {/* ═══ Website Content ═══ */}
+                <div className="flex-1 overflow-hidden transition-colors duration-500" style={{ backgroundColor: bg }}>
+
+                    {/* Navbar */}
+                    <div className="flex items-center justify-between px-4 py-2" style={{ borderBottom: `1px solid ${border}` }}>
+                        <span className="font-black text-[10px] tracking-tight" style={{ color: primary }}>{name}</span>
+                        <div className="flex gap-3">
+                            {navItems.map(n => (
+                                <span key={n} className="text-[7px] font-semibold uppercase tracking-widest" style={{ color: muted }}>{n}</span>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Hero Section */}
+                    <div className="relative px-4 py-5" style={{
+                        background: design.hero === 'video' || design.hero === '3d'
+                            ? `linear-gradient(135deg, ${primary}15, ${accent}10, ${bg})`
+                            : 'transparent',
+                    }}>
+                        {design.hero === '3d' && (
+                            <div className="absolute right-4 top-3 w-20 h-14 rounded-lg opacity-50"
+                                style={{
+                                    backgroundColor: primary + '15',
+                                    border: `1px solid ${primary}25`,
+                                    transform: 'perspective(400px) rotateY(-12deg) rotateX(5deg)',
+                                    boxShadow: `0 8px 30px ${primary}15`,
+                                }} />
+                        )}
+                        <div className={`relative ${design.layout === 'split' ? 'flex gap-4 items-center' : ''}`}>
+                            <div className="flex-1">
+                                <div className="text-[6px] uppercase font-bold tracking-[0.3em] mb-1.5" style={{ color: accent }}>{name}</div>
+                                <h3 className="text-sm font-black leading-tight mb-1.5" style={{ color: text }}>
+                                    Welcome to{' '}
+                                    <span style={{
+                                        background: `linear-gradient(135deg, ${primary}, ${accent})`,
+                                        WebkitBackgroundClip: 'text',
+                                        WebkitTextFillColor: 'transparent',
+                                    }}>{name}</span>
+                                </h3>
+                                <p className="text-[7px] mb-3 leading-relaxed max-w-[70%]" style={{ color: muted }}>
+                                    We deliver exceptional service tailored to your needs. Get started today.
+                                </p>
+                                {(design.hero === 'floating-form' || design.hero === '3d') && (
+                                    <div className="flex gap-1 mb-2 max-w-[200px]">
+                                        <div className="flex-1 h-4 rounded text-[6px] px-2 flex items-center" style={{ backgroundColor: surface, border: `1px solid ${border}`, color: muted }}>your@email.com</div>
+                                        <div className="px-2 h-4 rounded text-[6px] font-bold flex items-center" style={{ backgroundColor: primary, color: '#fff', borderRadius: cardBr }}>Go</div>
+                                    </div>
+                                )}
+                                <div className="inline-flex gap-1.5">
+                                    <div className="px-2.5 py-1 text-[7px] font-bold" style={{ backgroundColor: primary, color: '#fff', borderRadius: cardBr, boxShadow: `0 2px 10px ${primary}40` }}>Get Started</div>
+                                    <div className="px-2.5 py-1 text-[7px] font-bold" style={{ color: muted, border: `1px solid ${border}`, borderRadius: cardBr }}>Learn More</div>
+                                </div>
+                            </div>
+                            {design.layout === 'split' && (
+                                <div className="w-20 h-14 rounded-lg overflow-hidden" style={{ backgroundColor: surface, border: `1px solid ${border}` }}>
+                                    <div className="w-full h-full flex items-center justify-center text-[8px]" style={{ color: muted }}>📷</div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Features Section */}
+                    <div className="px-4 py-3" style={{ backgroundColor: surface }}>
+                        <div className="text-[6px] uppercase font-bold tracking-[0.3em] mb-2 text-center" style={{ color: accent }}>Why Choose Us</div>
+                        {design.layout === 'zigzag' ? (
+                            <div className="space-y-1.5">
+                                {[0, 1].map(i => (
+                                    <div key={i} className={`flex gap-2 items-center ${i % 2 ? 'flex-row-reverse' : ''}`}>
+                                        <div className="w-10 h-7 rounded" style={{ backgroundColor: primary + '10', border: `1px solid ${primary}15`, borderRadius: cardBr }} />
+                                        <div className="flex-1 space-y-0.5">
+                                            <div className="h-1 w-12 rounded-full" style={{ backgroundColor: text, opacity: 0.2 }} />
+                                            <div className="h-0.5 w-16 rounded-full" style={{ backgroundColor: text, opacity: 0.08 }} />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-3 gap-1.5">
+                                {['⚡', '🎯', '✨'].map((icon, i) => (
+                                    <div key={i} className="p-2 text-center" style={{
+                                        backgroundColor: bg,
+                                        borderRadius: cardBr,
+                                        border: `1px solid ${border}`,
+                                        boxShadow: design.shadows !== 'none' ? `0 2px 8px rgba(0,0,0,0.08)` : 'none',
+                                    }}>
+                                        <span className="text-[10px]">{icon}</span>
+                                        <div className="h-0.5 w-6 mx-auto rounded-full mt-1" style={{ backgroundColor: primary, opacity: 0.4 }} />
+                                        <div className="h-0.5 w-8 mx-auto rounded-full mt-0.5" style={{ backgroundColor: text, opacity: 0.08 }} />
+                                    </div>
+                                ))}
                             </div>
                         )}
-                        <div className="inline-block px-3 py-1.5 text-[8px] font-bold" style={{ backgroundColor: accent, color: bg, borderRadius, boxShadow: cardShadow }}>Get Started</div>
                     </div>
-                    {design.layout === 'split' && (
-                        <div className="w-24 h-16 rounded-lg" style={{ backgroundColor: accent + '15', border: `1px solid ${accent}20` }}>
-                            <div className="w-full h-full flex items-center justify-center text-[8px] font-bold" style={{ color: accent, opacity: 0.5 }}>📷</div>
+
+                    {/* Testimonials */}
+                    {showTestimonials && (
+                        <div className="px-4 py-2.5">
+                            <div className="text-[6px] uppercase font-bold tracking-[0.3em] mb-1.5 text-center" style={{ color: accent }}>What Clients Say</div>
+                            <div className="flex gap-1.5">
+                                {[1, 2, 3].map(i => (
+                                    <div key={i} className="flex-1 p-1.5" style={{ backgroundColor: surface, borderRadius: cardBr, border: `1px solid ${border}` }}>
+                                        <div className="text-[7px] mb-0.5" style={{ color: '#fbbf24' }}>★★★★★</div>
+                                        <div className="h-0.5 w-full rounded-full mb-0.5" style={{ backgroundColor: text, opacity: 0.08 }} />
+                                        <div className="h-0.5 w-3/4 rounded-full" style={{ backgroundColor: text, opacity: 0.05 }} />
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     )}
-                </div>
-            </div>
 
-            {/* Feature section - varies by layout */}
-            <div className="px-4 pb-3">
-                {design.layout === 'zigzag' ? (
-                    <div className="space-y-2">
-                        {[0, 1].map(i => (
-                            <div key={i} className={`flex gap-2 items-center ${i % 2 ? 'flex-row-reverse' : ''}`}>
-                                <div className="w-12 h-8 rounded" style={{ backgroundColor: accent + '12', borderRadius: cardRadius }}></div>
-                                <div className="flex-1 space-y-1">
-                                    <div className="h-1.5 w-16 rounded" style={{ backgroundColor: text, opacity: 0.2 }}></div>
-                                    <div className="h-1 w-20 rounded" style={{ backgroundColor: text, opacity: 0.1 }}></div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                ) : design.layout === 'sidebar' ? (
-                    <div className="flex gap-2">
-                        <div className="w-14 space-y-1">
-                            {['Dash', 'Info', 'Blog'].map(s => (
-                                <div key={s} className="px-2 py-1 text-[7px] font-bold" style={{ backgroundColor: surface + '30', color: text, opacity: 0.4, borderRadius: cardRadius }}>{s}</div>
-                            ))}
+                    {/* Feature Badges */}
+                    {(showBlog || showEcom) && (
+                        <div className="px-4 py-1.5 flex gap-1 justify-center">
+                            {showBlog && <span className="px-1.5 py-0.5 text-[6px] font-bold rounded-full" style={{ backgroundColor: accent + '15', color: accent, border: `1px solid ${accent}20` }}>✍️ Blog</span>}
+                            {showEcom && <span className="px-1.5 py-0.5 text-[6px] font-bold rounded-full" style={{ backgroundColor: primary + '15', color: primary, border: `1px solid ${primary}20` }}>🛒 Shop</span>}
                         </div>
-                        <div className="flex-1 grid grid-cols-2 gap-1">
-                            {[accent, secondary, muted, accent].map((c, i) => (
-                                <div key={i} className="p-2 rounded" style={{ backgroundColor: c + '12', borderRadius: cardRadius, boxShadow: cardShadow }}>
-                                    <div className="h-1 w-8 rounded mb-1" style={{ backgroundColor: text, opacity: 0.15 }}></div>
-                                    <div className="h-1 w-12 rounded" style={{ backgroundColor: text, opacity: 0.08 }}></div>
-                                </div>
-                            ))}
+                    )}
+
+                    {/* Footer */}
+                    <div className="px-4 py-2 mt-auto" style={{ borderTop: `1px solid ${border}` }}>
+                        <div className="flex items-center justify-between">
+                            <span className="text-[6px] font-bold" style={{ color: muted }}>© 2026 {name}</span>
+                            <div className="flex gap-2">
+                                {navItems.slice(0, 3).map(n => (
+                                    <span key={n} className="text-[6px]" style={{ color: muted }}>{n}</span>
+                                ))}
+                            </div>
                         </div>
                     </div>
-                ) : (
-                    <div className="grid grid-cols-3 gap-1.5">
-                        {['⚡', '🎯', '✨'].map((icon, i) => (
-                            <div key={i} className="p-2 text-center" style={{ backgroundColor: surface + '20', borderRadius: cardRadius, boxShadow: cardShadow }}>
-                                <span className="text-xs">{icon}</span>
-                                <div className="h-1 w-8 mx-auto rounded mt-1" style={{ backgroundColor: text, opacity: 0.15 }}></div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
-
-            {/* Feature badges */}
-            {features.length > 0 && (
-                <div className="px-4 pb-3 flex flex-wrap gap-1">
-                    {features.filter(f => !['contact', 'seo'].includes(f)).slice(0, 4).map(f => (
-                        <span key={f} className="px-2 py-0.5 text-[7px] font-bold rounded-full" style={{ backgroundColor: accent + '15', color: accent, border: `1px solid ${accent}20` }}>
-                            {f === 'blog' ? '✍️ Blog' : f === 'booking' ? '📅 Book' : f === 'ecommerce' ? '🛒 Shop' : f === 'testimonials' ? '⭐ Reviews' : f.includes('ai') ? '🤖 AI' : f}
-                        </span>
-                    ))}
                 </div>
-            )}
-
-            {/* Footer */}
-            <div className="px-4 py-2 text-center" style={{ borderTop: `1px solid ${accent}08` }}>
-                <span className="text-[7px] font-bold" style={{ color: text, opacity: 0.15 }}>© 2026 {name}</span>
             </div>
         </div>
     );

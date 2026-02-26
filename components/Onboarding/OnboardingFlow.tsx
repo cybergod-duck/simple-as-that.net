@@ -5,57 +5,46 @@ import { useTheme } from 'next-themes';
 import ColorPalettePicker from './ColorPalettePicker';
 import LiveMockup from './LiveMockup';
 
-/* ── Tier pricing from STRIPE_PRICE_LIST.md ──────────────── */
+/* ── Component pricing from STRIPE_PRICE_LIST.md ──────────────── */
 const HERO_OPTIONS = [
-    { id: 'basic', label: 'Simple Hero', desc: 'H1 + Subtitle + CTA', price: 49, tier: 1 },
-    { id: 'split', label: 'Split-Screen', desc: 'With industry image', price: 89, tier: 2 },
-    { id: 'floating-form', label: 'Dynamic + Float Form', desc: 'Lead capture built-in', price: 129, tier: 3 },
-    { id: 'video', label: 'Video Background', desc: 'High-end video hero', price: 179, tier: 4 },
-    { id: '3d', label: 'Premium 3D / Dashboard', desc: 'Highest visual impact', price: 249, tier: 5 },
+    { id: 'basic', label: 'Simple Hero', desc: 'H1 + Subtitle + CTA — clean and effective', price: 49, tier: 1 },
+    { id: 'split', label: 'Split-Screen Hero', desc: 'Your business image beside a strong headline', price: 89, tier: 2 },
+    { id: 'floating-form', label: 'Dynamic Hero + Lead Form', desc: 'Captures leads right from the hero', price: 129, tier: 3 },
+    { id: 'video', label: 'Video Background Hero', desc: 'High-impact video behind your message', price: 179, tier: 4 },
+    { id: '3d', label: 'Premium 3D Dashboard', desc: 'Highest visual impact — floating mockup', price: 249, tier: 5 },
 ];
 
 const FEATURE_OPTIONS = [
-    { id: '3point', label: '3-Point Highlights', price: 39 },
-    { id: 'icon-grid', label: '2-Column Icon Grid', price: 59 },
-    { id: 'zigzag', label: 'Zig-Zag Layout', price: 79 },
-    { id: 'hover-cards', label: 'Hover Cards', price: 99 },
-    { id: 'scroll-anim', label: 'Scroll Animations + Timeline', price: 139 },
+    { id: '3point', label: '3-Point Highlights', desc: 'Quick "Why Choose Us" section', price: 39 },
+    { id: 'icon-grid', label: '2-Column Icon Grid', desc: '4 value propositions with icons', price: 59 },
+    { id: 'zigzag', label: 'Zig-Zag Layout', desc: 'Alternating text/image rows', price: 79 },
+    { id: 'hover-cards', label: 'Interactive Hover Cards', desc: 'Pain-point mapping from your data', price: 99 },
+    { id: 'scroll-anim', label: 'Scroll Animations + Timeline', desc: 'Complex interactive scrolling', price: 139 },
 ];
 
 const TRUST_OPTIONS = [
-    { id: 'text-testimonial', label: 'Text Testimonial', price: 29 },
-    { id: 'review-slider', label: '3-Column Review Slider', price: 49 },
-    { id: 'client-success', label: 'Client Success + Logos', price: 69 },
-    { id: 'masonry-grid', label: 'Masonry Review Grid', price: 79 },
-    { id: 'video-trust', label: 'Video + Trust Badges', price: 99 },
+    { id: 'text-testimonial', label: 'Text Testimonial', desc: 'Simple quote block', price: 29 },
+    { id: 'review-slider', label: '3-Column Review Slider', desc: 'Rotating customer reviews', price: 49 },
+    { id: 'client-success', label: 'Client Success + Logos', desc: 'Case studies with brand logos', price: 69 },
+    { id: 'masonry-grid', label: 'Masonry Review Grid', desc: '3-column visual review layout', price: 79 },
+    { id: 'video-trust', label: 'Video + Trust Badges', desc: 'Video testimonials with state badges', price: 99 },
 ];
 
 const INTEGRATION_OPTIONS = [
-    { id: 'basic-form', label: 'Basic Lead Form → Email', price: 39 },
-    { id: 'crm-form', label: 'CRM/Email Integration', price: 79 },
-    { id: 'calendar', label: 'Lead Capture + Calendar', price: 119 },
-    { id: 'enterprise', label: 'Enterprise Calendly + CRM', price: 179 },
+    { id: 'basic-form', label: 'Basic Lead Form', desc: 'Routes to your email', price: 39 },
+    { id: 'crm-form', label: 'CRM / Email Integration', desc: 'Connects to your CRM', price: 79 },
+    { id: 'calendar', label: 'Lead Capture + Calendar', desc: 'Booking system built-in', price: 119 },
+    { id: 'enterprise', label: 'Enterprise Calendly + CRM', desc: 'Full booking + CRM webhook', price: 179 },
 ];
 
-const ADDON_FEATURES = [
-    { id: 'ai-basic', label: 'Simple AI+ Basic', desc: '100 queries/mo', icon: '🤖', price: 9, monthly: true },
-    { id: 'ai-pro', label: 'Simple AI+ Pro', desc: '1,000 queries/mo', icon: '🧠', price: 29, monthly: true },
-    { id: 'ai-unlimited', label: 'Simple AI+ Unlimited', desc: 'Unlimited', icon: '⚡', price: 49, monthly: true },
-    { id: 'blog', label: 'Blog Infrastructure', desc: 'Automated blog setup', icon: '✍️', price: 79 },
-    { id: 'ecommerce', label: 'E-Commerce', desc: 'Sell products online', icon: '🛒', price: 149 },
-];
-
-type Step = 'info' | 'colors' | 'hero' | 'layout' | 'trust' | 'integration' | 'pages' | 'addons' | 'preview';
+type Step = 'info' | 'colors' | 'hero' | 'layout' | 'trust' | 'integration' | 'pages' | 'summary';
 
 export default function OnboardingFlow() {
     const { theme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const [step, setStep] = useState<Step>('info');
 
-    const [formData, setFormData] = useState({
-        name: '', industry: '', hasWebsite: '', existingUrl: '', goals: '',
-    });
-
+    const [formData, setFormData] = useState({ name: '', industry: '' });
     const [palette, setPalette] = useState<string[]>(['#7c3aed', '#06b6d4', '#f43f5e']);
     const [design, setDesign] = useState({
         pages: '1', mode: 'dark', shadows: 'subtle', borders: 'rounded', layout: 'stack', images: 'few', hero: 'basic',
@@ -65,45 +54,37 @@ export default function OnboardingFlow() {
     const [selectedTrust, setSelectedTrust] = useState(TRUST_OPTIONS[0]);
     const [selectedIntegration, setSelectedIntegration] = useState(INTEGRATION_OPTIONS[0]);
     const [pageCount, setPageCount] = useState(1);
-    const [addons, setAddons] = useState<string[]>([]);
 
     const [chatMessages, setChatMessages] = useState<{ role: string; text: string }[]>([]);
     const [chatInput, setChatInput] = useState('');
     const [showChat, setShowChat] = useState(false);
-
     const [domain, setDomain] = useState('');
 
     useEffect(() => { setMounted(true); }, []);
 
-    // Price calculation
-    const heroPrice = selectedHero.price;
-    const featurePrice = selectedFeature.price;
-    const trustPrice = selectedTrust.price;
-    const integrationPrice = selectedIntegration.price;
-    const pagesPrice = pageCount * 49;
-    const addonsPrice = ADDON_FEATURES.filter(a => addons.includes(a.id) && !a.monthly).reduce((sum, a) => sum + a.price, 0);
-    const monthlyAddons = ADDON_FEATURES.filter(a => addons.includes(a.id) && a.monthly).reduce((sum, a) => sum + a.price, 0);
-    const totalPrice = heroPrice + featurePrice + trustPrice + integrationPrice + pagesPrice + addonsPrice;
+    // ── Price & Tier Calculation ──
+    const totalPrice = selectedHero.price + selectedFeature.price + selectedTrust.price + selectedIntegration.price + (pageCount * 49);
     const tier = totalPrice >= 849 ? 'Enterprise' : totalPrice >= 549 ? 'Premium' : totalPrice >= 349 ? 'Business' : totalPrice >= 199 ? 'Professional' : 'Landing Page';
 
-    const features = [...addons];
+    // Bundled features by tier
+    const includesBlog = tier === 'Enterprise';
+    const includesEcom = tier === 'Premium' || tier === 'Enterprise';
+    const includesLogo = tier === 'Premium' || tier === 'Enterprise';
+    const includesAIPlus = tier === 'Business' || tier === 'Premium' || tier === 'Enterprise';
+
+    const features = [] as string[];
     if (selectedTrust.id !== 'text-testimonial') features.push('testimonials');
-    if (addons.includes('blog')) features.push('blog');
-    if (addons.includes('ecommerce')) features.push('ecommerce');
+    if (includesBlog) features.push('blog');
+    if (includesEcom) features.push('ecommerce');
 
     if (!mounted) return null;
     const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
-    const steps: Step[] = ['info', 'colors', 'hero', 'layout', 'trust', 'integration', 'pages', 'addons', 'preview'];
+    const steps: Step[] = ['info', 'colors', 'hero', 'layout', 'trust', 'integration', 'pages', 'summary'];
     const stepIndex = steps.indexOf(step);
     const canNext = step === 'info' ? !!(formData.name && formData.industry) : true;
 
-    const next = () => {
-        if (stepIndex < steps.length - 1) {
-            setStep(steps[stepIndex + 1]);
-            if (!showChat && stepIndex >= 0) setShowChat(true);
-        }
-    };
+    const next = () => { if (stepIndex < steps.length - 1) { setStep(steps[stepIndex + 1]); if (!showChat && stepIndex >= 0) setShowChat(true); } };
     const back = () => { if (stepIndex > 0) setStep(steps[stepIndex - 1]); };
 
     const sendChat = async () => {
@@ -127,56 +108,91 @@ export default function OnboardingFlow() {
         { domain: slug + '.io', available: false, price: 49.99 },
     ];
 
-    // render question option card
+    // ── Step labels for progress bar ──
+    const stepLabels = ['Info', 'Colors', 'Hero', 'Layout', 'Trust', 'Leads', 'Pages', 'Done'];
+
+    // ── Glassmorphic OptionCard ──
     const OptionCard = ({ selected, label, price, onClick, desc }: { selected: boolean; label: string; price: number; onClick: () => void; desc?: string }) => (
-        <button onClick={onClick} className={`w-full p-3 rounded-xl border text-left transition-all duration-200 ${selected
-            ? (isDark ? 'bg-cyan-500/10 border-cyan-500/40 shadow-[0_0_10px_rgba(0,255,255,0.1)]' : 'bg-purple-50 border-purple-400')
-            : (isDark ? 'bg-white/[0.02] border-white/10 hover:border-white/20' : 'bg-white/80 border-slate-200 hover:border-slate-300')}`}>
-            <div className="flex items-center justify-between">
-                <div>
-                    <h4 className={`font-bold text-xs ${isDark ? 'text-white' : 'text-slate-900'}`}>{label}</h4>
-                    {desc && <p className={`text-[10px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{desc}</p>}
+        <button onClick={onClick} className={`w-full p-4 rounded-2xl border text-left transition-all duration-300 backdrop-blur-sm group
+            ${selected
+                ? 'bg-gradient-to-r from-purple-500/10 via-cyan-500/5 to-transparent border-cyan-500/40 shadow-[0_0_25px_rgba(6,182,212,0.12)]'
+                : 'bg-white/[0.02] border-white/[0.06] hover:border-white/15 hover:bg-white/[0.04] hover:scale-[1.01]'
+            }`}>
+            <div className="flex items-center justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                        {selected && <div className="w-4 h-4 rounded-full bg-gradient-to-br from-purple-500 to-cyan-400 flex items-center justify-center shrink-0">
+                            <svg className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
+                        </div>}
+                        <h4 className={`font-bold text-sm ${selected ? 'text-white' : 'text-slate-300 group-hover:text-white'}`}>{label}</h4>
+                    </div>
+                    {desc && <p className="text-[11px] text-slate-500 mt-0.5 ml-6">{desc}</p>}
                 </div>
-                <span className={`text-xs font-bold ${isDark ? 'text-cyan-400/70' : 'text-purple-500'}`}>${price}</span>
+                <span className={`text-sm font-black tracking-tight shrink-0 ${selected ? 'text-cyan-400' : 'text-slate-600'}`}>${price}</span>
             </div>
         </button>
     );
 
     return (
-        <div className={`w-full min-h-screen flex font-sans transition-colors ${isDark ? 'bg-[#0d0521] text-slate-200' : 'bg-[#FAFAFA] text-slate-900'}`}>
-            {/* Background */}
-            <div className={`fixed inset-0 z-0 ${isDark ? 'bg-[#0d0521]' : 'bg-[#FAFAFA]'}`}></div>
-            <div className={`fixed inset-0 bg-[size:40px_40px] pointer-events-none z-0 ${isDark
-                ? 'bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)]'
-                : 'bg-[linear-gradient(rgba(168,85,247,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.05)_1px,transparent_1px)]'}`}></div>
+        <div className="w-full min-h-screen flex font-sans bg-[#0d0521] text-slate-200 relative overflow-hidden">
+            {/* ═══ Ambient Glows ═══ */}
+            <div className="fixed inset-0 z-0 pointer-events-none">
+                <div className="absolute top-[-15%] left-[15%] w-[50vw] h-[50vw] rounded-full blur-[120px] mix-blend-screen bg-purple-600/15 animate-[pulse_8s_ease-in-out_infinite]" />
+                <div className="absolute top-[40%] right-[10%] w-[40vw] h-[40vw] rounded-full blur-[100px] mix-blend-screen bg-cyan-500/8 animate-[pulse_6s_ease-in-out_infinite]" />
+                <div className="absolute bottom-[-10%] left-[30%] w-[45vw] h-[45vw] rounded-full blur-[110px] mix-blend-screen bg-purple-500/10 animate-[pulse_7s_ease-in-out_infinite]" />
+            </div>
+            {/* Grid */}
+            <div className="fixed inset-0 bg-[size:40px_40px] pointer-events-none z-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_80%)]" />
 
-            {/* ═══ LEFT PANEL: Questions ═══ */}
-            <div className="relative z-10 w-full md:w-[45%] lg:w-[40%] min-h-screen overflow-y-auto p-6 md:p-10 flex flex-col">
-                {/* Price badge */}
-                <div className="flex items-center justify-between mb-6">
-                    <div className={`text-[10px] font-bold uppercase tracking-widest ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>
-                        Step {stepIndex + 1} of {steps.length}
-                    </div>
-                    <div className={`px-4 py-2 rounded-xl font-mono font-bold text-sm ${isDark ? 'bg-white/5 border border-white/10 text-cyan-400' : 'bg-slate-100 border border-slate-200 text-purple-600'}`}>
-                        ${totalPrice} <span className={`text-[10px] ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>{tier}</span>
+            {/* ═══ LEFT PANEL ═══ */}
+            <div className="relative z-10 w-full md:w-[45%] lg:w-[42%] min-h-screen overflow-y-auto p-6 md:p-10 flex flex-col">
+
+                {/* ── Progress Bar ── */}
+                <div className="mb-8">
+                    <div className="flex items-center gap-1 mb-2">
+                        {stepLabels.map((label, i) => (
+                            <div key={label} className="flex-1 flex flex-col items-center gap-1">
+                                <div className={`w-full h-1 rounded-full transition-all duration-500 ${i < stepIndex ? 'bg-gradient-to-r from-purple-500 to-cyan-400'
+                                        : i === stepIndex ? 'bg-gradient-to-r from-purple-500 to-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.4)]'
+                                            : 'bg-white/[0.06]'
+                                    }`} />
+                                <span className={`text-[8px] font-bold uppercase tracking-widest transition-colors ${i <= stepIndex ? 'text-cyan-400/80' : 'text-slate-700'
+                                    }`}>{label}</span>
+                            </div>
+                        ))}
                     </div>
                 </div>
 
-                {/* Step content */}
-                <div className="flex-1 animate-fade-in">
+                {/* ── Price Badge ── */}
+                <div className="flex items-center justify-between mb-6">
+                    <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600">
+                        Step {stepIndex + 1} of {steps.length}
+                    </div>
+                    <div className="px-5 py-2.5 rounded-2xl font-mono backdrop-blur-xl bg-white/[0.04] border border-white/[0.08] shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
+                        <span className="text-lg font-black text-cyan-400">${totalPrice}</span>
+                        <span className="text-[10px] font-bold text-slate-500 ml-2 uppercase tracking-widest">{tier}</span>
+                    </div>
+                </div>
+
+                {/* ═══ Step Content ═══ */}
+                <div className="flex-1">
+
                     {step === 'info' && (
-                        <div className="space-y-4">
-                            <h2 className={`text-2xl font-black tracking-tighter ${isDark ? 'text-white' : 'text-slate-900'}`}>Let's build your site.</h2>
+                        <div className="space-y-6">
                             <div>
-                                <label className={`block text-[10px] font-bold uppercase tracking-widest mb-2 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Business Name</label>
+                                <h2 className="text-3xl font-black tracking-tighter text-white">Let's build your site.</h2>
+                                <p className="text-sm text-slate-500 mt-1">Tell us about your business and we'll design the perfect website.</p>
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-purple-400/80 mb-2">Business Name</label>
                                 <input required type="text" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })}
-                                    className={`w-full bg-transparent border-b-2 py-3 text-lg font-bold focus:outline-none ${isDark ? 'border-purple-800 focus:border-cyan-400 text-white placeholder:text-slate-700' : 'border-purple-200 focus:border-purple-500 text-slate-900 placeholder:text-slate-300'}`}
+                                    className="w-full bg-transparent border-b-2 border-purple-800/50 focus:border-cyan-400 py-3 text-xl font-bold text-white placeholder:text-slate-700 focus:outline-none transition-colors"
                                     placeholder="Acme Corp" />
                             </div>
                             <div>
-                                <label className={`block text-[10px] font-bold uppercase tracking-widest mb-2 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Industry</label>
+                                <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-purple-400/80 mb-2">Industry</label>
                                 <input required type="text" value={formData.industry} onChange={e => setFormData({ ...formData, industry: e.target.value })}
-                                    className={`w-full bg-transparent border-b-2 py-3 text-lg font-bold focus:outline-none ${isDark ? 'border-purple-800 focus:border-cyan-400 text-white placeholder:text-slate-700' : 'border-purple-200 focus:border-purple-500 text-slate-900 placeholder:text-slate-300'}`}
+                                    className="w-full bg-transparent border-b-2 border-purple-800/50 focus:border-cyan-400 py-3 text-xl font-bold text-white placeholder:text-slate-700 focus:outline-none transition-colors"
                                     placeholder="Plumbing" />
                             </div>
                         </div>
@@ -188,7 +204,10 @@ export default function OnboardingFlow() {
 
                     {step === 'hero' && (
                         <div className="space-y-3">
-                            <h3 className={`text-lg font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>Choose Your Hero</h3>
+                            <div className="mb-4">
+                                <h3 className="text-xl font-black tracking-tight text-white">Choose Your Hero</h3>
+                                <p className="text-xs text-slate-500 mt-0.5">The first thing visitors see — make it count.</p>
+                            </div>
                             {HERO_OPTIONS.map(h => (
                                 <OptionCard key={h.id} selected={selectedHero.id === h.id} label={h.label} price={h.price} desc={h.desc}
                                     onClick={() => { setSelectedHero(h); setDesign({ ...design, hero: h.id }); }} />
@@ -198,9 +217,12 @@ export default function OnboardingFlow() {
 
                     {step === 'layout' && (
                         <div className="space-y-3">
-                            <h3 className={`text-lg font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>Feature Layout</h3>
+                            <div className="mb-4">
+                                <h3 className="text-xl font-black tracking-tight text-white">Feature Layout</h3>
+                                <p className="text-xs text-slate-500 mt-0.5">How your services and value props are displayed.</p>
+                            </div>
                             {FEATURE_OPTIONS.map(f => (
-                                <OptionCard key={f.id} selected={selectedFeature.id === f.id} label={f.label} price={f.price}
+                                <OptionCard key={f.id} selected={selectedFeature.id === f.id} label={f.label} price={f.price} desc={f.desc}
                                     onClick={() => {
                                         setSelectedFeature(f);
                                         const layoutMap: Record<string, string> = { '3point': 'stack', 'icon-grid': 'stack', 'zigzag': 'zigzag', 'hover-cards': 'stack', 'scroll-anim': 'sidebar' };
@@ -212,9 +234,12 @@ export default function OnboardingFlow() {
 
                     {step === 'trust' && (
                         <div className="space-y-3">
-                            <h3 className={`text-lg font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>Trust & Social Proof</h3>
+                            <div className="mb-4">
+                                <h3 className="text-xl font-black tracking-tight text-white">Trust & Social Proof</h3>
+                                <p className="text-xs text-slate-500 mt-0.5">Build credibility with reviews and testimonials.</p>
+                            </div>
                             {TRUST_OPTIONS.map(t => (
-                                <OptionCard key={t.id} selected={selectedTrust.id === t.id} label={t.label} price={t.price}
+                                <OptionCard key={t.id} selected={selectedTrust.id === t.id} label={t.label} price={t.price} desc={t.desc}
                                     onClick={() => setSelectedTrust(t)} />
                             ))}
                         </div>
@@ -222,183 +247,187 @@ export default function OnboardingFlow() {
 
                     {step === 'integration' && (
                         <div className="space-y-3">
-                            <h3 className={`text-lg font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>Lead Capture</h3>
+                            <div className="mb-4">
+                                <h3 className="text-xl font-black tracking-tight text-white">Lead Capture</h3>
+                                <p className="text-xs text-slate-500 mt-0.5">How visitors become customers.</p>
+                            </div>
                             {INTEGRATION_OPTIONS.map(ig => (
-                                <OptionCard key={ig.id} selected={selectedIntegration.id === ig.id} label={ig.label} price={ig.price}
+                                <OptionCard key={ig.id} selected={selectedIntegration.id === ig.id} label={ig.label} price={ig.price} desc={ig.desc}
                                     onClick={() => setSelectedIntegration(ig)} />
                             ))}
                         </div>
                     )}
 
                     {step === 'pages' && (
-                        <div className="space-y-3">
-                            <h3 className={`text-lg font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>How Many Pages?</h3>
-                            <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>$49 per page</p>
-                            <div className="flex gap-2">
-                                {[1, 3, 4, 5, 6].map(n => (
-                                    <button key={n} onClick={() => { setPageCount(n); setDesign({ ...design, pages: String(n) }); }}
-                                        className={`flex-1 py-3 rounded-xl border font-bold text-sm transition-all ${pageCount === n
-                                            ? (isDark ? 'bg-cyan-500/10 border-cyan-500/40 text-cyan-400' : 'bg-purple-50 border-purple-400 text-purple-600')
-                                            : (isDark ? 'bg-white/[0.02] border-white/10 text-slate-400' : 'bg-white/80 border-slate-200 text-slate-500')}`}>
-                                        {n}
-                                    </button>
-                                ))}
+                        <div className="space-y-5">
+                            <div className="mb-2">
+                                <h3 className="text-xl font-black tracking-tight text-white">Pages & Design</h3>
+                                <p className="text-xs text-slate-500 mt-0.5">$49 per page — choose your count and style.</p>
                             </div>
-                            <div className="space-y-2 pt-2">
-                                <h4 className={`text-xs font-bold uppercase tracking-widest ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Design Options</h4>
-                                <div className="grid grid-cols-2 gap-2">
-                                    {[['shadows', ['none', 'subtle', 'heavy']], ['borders', ['rounded', 'sharp', 'pill']], ['mode', ['dark', 'light', 'both']]].map(([key, opts]) => (
-                                        <div key={key as string}>
-                                            <span className={`text-[10px] font-bold uppercase tracking-widest ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>{key as string}</span>
-                                            <div className="flex gap-1 mt-1">
-                                                {(opts as string[]).map(o => (
-                                                    <button key={o} onClick={() => setDesign({ ...design, [key as string]: o })}
-                                                        className={`flex-1 py-1 text-[10px] font-bold rounded-lg border ${design[key as keyof typeof design] === o
-                                                            ? (isDark ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400' : 'bg-purple-50 border-purple-300 text-purple-600')
-                                                            : (isDark ? 'border-white/5 text-slate-600' : 'border-slate-100 text-slate-400')}`}>
-                                                        {o}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
+                            <div>
+                                <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-purple-400/80 mb-2">Page Count</label>
+                                <div className="flex gap-2">
+                                    {[1, 3, 4, 5, 6].map(n => (
+                                        <button key={n} onClick={() => { setPageCount(n); setDesign({ ...design, pages: String(n) }); }}
+                                            className={`flex-1 py-3 rounded-xl border font-bold text-sm transition-all duration-300 ${pageCount === n
+                                                ? 'bg-gradient-to-r from-purple-500/15 to-cyan-500/10 border-cyan-500/40 text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.1)]'
+                                                : 'bg-white/[0.02] border-white/[0.06] text-slate-500 hover:border-white/15 hover:text-slate-300'}`}>
+                                            {n}
+                                        </button>
                                     ))}
                                 </div>
                             </div>
-                        </div>
-                    )}
-
-                    {step === 'addons' && (
-                        <div className="space-y-3">
-                            <h3 className={`text-lg font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>Add-Ons</h3>
-                            {ADDON_FEATURES.map(a => {
-                                const isOn = addons.includes(a.id);
-                                // AI tier exclusivity
-                                const isAi = a.id.startsWith('ai-');
-                                return (
-                                    <button key={a.id} onClick={() => {
-                                        let next = [...addons];
-                                        if (isOn) next = next.filter(x => x !== a.id);
-                                        else {
-                                            if (isAi) next = next.filter(x => !x.startsWith('ai-'));
-                                            next.push(a.id);
-                                        }
-                                        setAddons(next);
-                                    }} className={`w-full flex items-center gap-3 p-3 rounded-xl border text-left transition-all ${isOn
-                                        ? (isDark ? 'bg-purple-900/30 border-cyan-500/40' : 'bg-purple-50 border-purple-400')
-                                        : (isDark ? 'bg-white/[0.02] border-white/10 hover:border-white/20' : 'bg-white/80 border-slate-200')}`}>
-                                        <span className="text-lg">{a.icon}</span>
-                                        <div className="flex-1">
-                                            <h4 className={`font-bold text-xs ${isDark ? 'text-white' : 'text-slate-900'}`}>{a.label}</h4>
-                                            <p className={`text-[10px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{a.desc}</p>
+                            <div className="grid grid-cols-3 gap-3">
+                                {([['shadows', ['none', 'subtle', 'heavy']], ['borders', ['rounded', 'sharp', 'pill']], ['mode', ['dark', 'light', 'both']]] as [string, string[]][]).map(([key, opts]) => (
+                                    <div key={key}>
+                                        <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-600">{key}</span>
+                                        <div className="flex flex-col gap-1 mt-1.5">
+                                            {opts.map(o => (
+                                                <button key={o} onClick={() => setDesign({ ...design, [key]: o })}
+                                                    className={`py-1.5 text-[10px] font-bold rounded-lg border transition-all ${design[key as keyof typeof design] === o
+                                                        ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400'
+                                                        : 'border-white/[0.04] text-slate-600 hover:text-slate-400'}`}>
+                                                    {o}
+                                                </button>
+                                            ))}
                                         </div>
-                                        <span className={`text-xs font-bold ${isDark ? 'text-cyan-400/70' : 'text-purple-500'}`}>{a.monthly ? `$${a.price}/mo` : `$${a.price}`}</span>
-                                        <div className={`w-8 h-5 rounded-full relative ${isOn ? (isDark ? 'bg-cyan-500' : 'bg-purple-500') : (isDark ? 'bg-white/10' : 'bg-slate-300')}`}>
-                                            <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${isOn ? 'translate-x-3.5' : 'translate-x-0.5'}`}></div>
-                                        </div>
-                                    </button>
-                                );
-                            })}
-                            {/* Bundled perks */}
-                            <div className={`mt-4 pt-3 space-y-2 ${isDark ? 'border-t border-white/5' : 'border-t border-slate-100'}`}>
-                                <span className={`text-[10px] font-bold uppercase tracking-widest ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>Bundled at higher tiers</span>
-                                <div className={`p-2 rounded-xl border flex items-center gap-2 ${totalPrice >= 549 ? (isDark ? 'bg-green-900/10 border-green-500/20' : 'bg-green-50 border-green-200') : (isDark ? 'border-white/5 opacity-40' : 'border-slate-100 opacity-40')}`}>
-                                    <span>🎨</span><span className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>Custom Logo + Compliance</span>
-                                    <span className={`ml-auto text-[10px] font-bold ${totalPrice >= 549 ? 'text-green-400' : 'text-slate-500'}`}>{totalPrice >= 549 ? 'Included' : 'Premium'}</span>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {step === 'preview' && (
-                        <div className="space-y-4">
-                            <h3 className={`text-lg font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>Pick Your Domain</h3>
-                            <div className="space-y-2">
-                                {domains.map((d, i) => (
-                                    <div key={i} className={`flex items-center justify-between p-3 rounded-xl border ${isDark ? 'bg-black/40 border-white/5' : 'bg-slate-50 border-slate-200'}`}>
-                                        <div>
-                                            <span className={`font-bold text-sm ${!d.available ? 'line-through opacity-40' : (isDark ? 'text-cyan-100' : 'text-slate-800')}`}>{d.domain}</span>
-                                            {d.available && <span className={`ml-2 text-xs ${isDark ? 'text-green-400' : 'text-green-600'}`}>${d.price}/yr</span>}
-                                        </div>
-                                        {d.available ? (
-                                            <button onClick={() => setDomain(d.domain)} className={`px-3 py-1.5 rounded-lg text-xs font-bold border ${domain === d.domain
-                                                ? (isDark ? 'bg-cyan-500/20 text-cyan-400 border-cyan-500/50' : 'bg-purple-100 text-purple-600 border-purple-400')
-                                                : (isDark ? 'bg-white/5 text-slate-400 border-white/10' : 'bg-white text-slate-500 border-slate-200')}`}>
-                                                {domain === d.domain ? '✓ Selected' : 'Select'}
-                                            </button>
-                                        ) : <span className={`text-xs font-bold ${isDark ? 'text-pink-500' : 'text-pink-600'}`}>Taken</span>}
                                     </div>
                                 ))}
                             </div>
-                            <div className={`p-4 rounded-xl border ${isDark ? 'bg-white/[0.02] border-white/10' : 'bg-white border-slate-200'}`}>
-                                <h4 className={`text-sm font-bold mb-3 ${isDark ? 'text-white' : 'text-slate-900'}`}>Price Summary</h4>
-                                <div className="space-y-1 text-xs">
-                                    <div className="flex justify-between"><span className={isDark ? 'text-slate-400' : 'text-slate-600'}>Hero: {selectedHero.label}</span><span>${selectedHero.price}</span></div>
-                                    <div className="flex justify-between"><span className={isDark ? 'text-slate-400' : 'text-slate-600'}>Layout: {selectedFeature.label}</span><span>${selectedFeature.price}</span></div>
-                                    <div className="flex justify-between"><span className={isDark ? 'text-slate-400' : 'text-slate-600'}>Trust: {selectedTrust.label}</span><span>${selectedTrust.price}</span></div>
-                                    <div className="flex justify-between"><span className={isDark ? 'text-slate-400' : 'text-slate-600'}>Integration: {selectedIntegration.label}</span><span>${selectedIntegration.price}</span></div>
-                                    <div className="flex justify-between"><span className={isDark ? 'text-slate-400' : 'text-slate-600'}>{pageCount} Page{pageCount > 1 ? 's' : ''}</span><span>${pagesPrice}</span></div>
-                                    {addonsPrice > 0 && <div className="flex justify-between"><span className={isDark ? 'text-slate-400' : 'text-slate-600'}>Add-ons</span><span>${addonsPrice}</span></div>}
-                                    <div className={`flex justify-between pt-2 mt-2 font-bold text-sm ${isDark ? 'border-t border-white/10 text-cyan-400' : 'border-t border-slate-200 text-purple-600'}`}>
-                                        <span>Total ({tier})</span><span>${totalPrice}</span>
+
+                            {/* Bundled Features Indicators */}
+                            <div className="pt-3 border-t border-white/[0.04] space-y-2">
+                                <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-600">Included In Your Tier</span>
+                                {[
+                                    { label: 'Simple AI+ Concierge', included: includesAIPlus, tier: 'Business+' },
+                                    { label: 'E-Commerce Ready', included: includesEcom, tier: 'Premium+' },
+                                    { label: 'Blog Infrastructure', included: includesBlog, tier: 'Enterprise' },
+                                    { label: 'Custom Logo + Compliance', included: includesLogo, tier: 'Premium+' },
+                                ].map(item => (
+                                    <div key={item.label} className={`flex items-center gap-2 p-2.5 rounded-xl border transition-all ${item.included
+                                            ? 'bg-emerald-500/[0.06] border-emerald-500/20'
+                                            : 'border-white/[0.04] opacity-35'}`}>
+                                        <span className={`text-xs ${item.included ? 'text-emerald-400' : 'text-slate-600'}`}>{item.included ? '✓' : '○'}</span>
+                                        <span className={`text-xs font-bold ${item.included ? 'text-white' : 'text-slate-600'}`}>{item.label}</span>
+                                        <span className={`ml-auto text-[9px] font-bold ${item.included ? 'text-emerald-400' : 'text-slate-700'}`}>
+                                            {item.included ? 'Included' : item.tier}
+                                        </span>
                                     </div>
-                                    {monthlyAddons > 0 && <div className={`flex justify-between text-[10px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}><span>+ Monthly</span><span>${monthlyAddons}/mo + $29/mo hosting</span></div>}
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {step === 'summary' && (
+                        <div className="space-y-5">
+                            <div>
+                                <h3 className="text-xl font-black tracking-tight text-white">Pick Your Domain</h3>
+                                <p className="text-xs text-slate-500 mt-0.5">Choose a domain and review your build.</p>
+                            </div>
+                            <div className="space-y-2">
+                                {domains.map((d, i) => (
+                                    <div key={i} className={`flex items-center justify-between p-3 rounded-xl border backdrop-blur-sm ${domain === d.domain ? 'bg-cyan-500/[0.06] border-cyan-500/30' : 'bg-white/[0.02] border-white/[0.06]'}`}>
+                                        <div>
+                                            <span className={`font-bold text-sm ${!d.available ? 'line-through opacity-40' : 'text-white'}`}>{d.domain}</span>
+                                            {d.available && <span className="ml-2 text-xs text-emerald-400">${d.price}/yr</span>}
+                                        </div>
+                                        {d.available ? (
+                                            <button onClick={() => setDomain(d.domain)} className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${domain === d.domain
+                                                ? 'bg-cyan-500/20 text-cyan-400 border-cyan-500/50'
+                                                : 'bg-white/[0.03] text-slate-400 border-white/10 hover:border-white/20'}`}>
+                                                {domain === d.domain ? '✓ Selected' : 'Select'}
+                                            </button>
+                                        ) : <span className="text-xs font-bold text-pink-500">Taken</span>}
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Price Summary */}
+                            <div className="p-5 rounded-2xl border bg-white/[0.02] border-white/[0.06] backdrop-blur-sm">
+                                <h4 className="text-sm font-bold text-white mb-3">Price Summary</h4>
+                                <div className="space-y-1.5 text-xs">
+                                    <div className="flex justify-between"><span className="text-slate-400">Hero: {selectedHero.label}</span><span className="text-slate-300">${selectedHero.price}</span></div>
+                                    <div className="flex justify-between"><span className="text-slate-400">Layout: {selectedFeature.label}</span><span className="text-slate-300">${selectedFeature.price}</span></div>
+                                    <div className="flex justify-between"><span className="text-slate-400">Trust: {selectedTrust.label}</span><span className="text-slate-300">${selectedTrust.price}</span></div>
+                                    <div className="flex justify-between"><span className="text-slate-400">Integration: {selectedIntegration.label}</span><span className="text-slate-300">${selectedIntegration.price}</span></div>
+                                    <div className="flex justify-between"><span className="text-slate-400">{pageCount} Page{pageCount > 1 ? 's' : ''}</span><span className="text-slate-300">${pageCount * 49}</span></div>
+                                    <div className="flex justify-between pt-3 mt-3 border-t border-white/10 font-bold text-base">
+                                        <span className="text-white">Total <span className="text-cyan-400">({tier})</span></span>
+                                        <span className="text-cyan-400 font-black">${totalPrice}</span>
+                                    </div>
+                                    <div className="flex justify-between text-[10px] text-slate-600">
+                                        <span>+ Monthly</span><span>$29/mo hosting & Simple AI+</span>
+                                    </div>
                                 </div>
                             </div>
-                            <button className={`w-full py-4 rounded-xl font-bold text-sm uppercase tracking-widest transition-all ${isDark
-                                ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-[0_0_25px_rgba(168,85,247,0.3)]'
-                                : 'bg-purple-600 text-white shadow-lg'}`}>
+
+                            {/* Bundled features summary */}
+                            {(includesAIPlus || includesEcom || includesBlog) && (
+                                <div className="flex flex-wrap gap-1.5">
+                                    {includesAIPlus && <span className="px-3 py-1 text-[10px] font-bold rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/20">🤖 Simple AI+ Included</span>}
+                                    {includesEcom && <span className="px-3 py-1 text-[10px] font-bold rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">🛒 E-Commerce Ready</span>}
+                                    {includesBlog && <span className="px-3 py-1 text-[10px] font-bold rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">✍️ Blog Included</span>}
+                                    {includesLogo && <span className="px-3 py-1 text-[10px] font-bold rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20">🎨 Custom Logo</span>}
+                                </div>
+                            )}
+
+                            <button className="w-full py-4 rounded-2xl font-bold text-sm uppercase tracking-[0.15em] transition-all bg-gradient-to-r from-purple-600 via-purple-500 to-cyan-500 text-white shadow-[0_0_30px_rgba(168,85,247,0.3)] hover:shadow-[0_0_45px_rgba(168,85,247,0.45)] hover:scale-[1.01] active:scale-[0.99]">
                                 Build My Website →
                             </button>
                         </div>
                     )}
                 </div>
 
-                {/* Nav buttons */}
-                {step !== 'preview' && (
+                {/* ── Nav Buttons ── */}
+                {step !== 'summary' && (
                     <div className="flex gap-3 pt-6 mt-auto">
                         {stepIndex > 0 && (
-                            <button onClick={back} className={`px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest border ${isDark ? 'border-white/10 text-slate-400 hover:text-white' : 'border-slate-200 text-slate-500 hover:text-slate-900'}`}>← Back</button>
+                            <button onClick={back} className="px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-[0.15em] border border-white/[0.06] text-slate-500 hover:text-white hover:border-white/15 transition-all">
+                                ← Back
+                            </button>
                         )}
                         <button onClick={next} disabled={!canNext}
-                            className={`flex-1 py-3 rounded-xl font-bold text-xs uppercase tracking-widest border transition-all ${canNext
-                                ? (isDark ? 'bg-purple-900/60 border-purple-500/40 text-white hover:border-cyan-400' : 'bg-purple-600 border-purple-500 text-white')
-                                : 'opacity-30 cursor-not-allowed border-white/5 text-slate-600'}`}>
+                            className={`flex-1 py-3.5 rounded-xl font-bold text-xs uppercase tracking-[0.15em] transition-all duration-300 ${canNext
+                                ? 'bg-gradient-to-r from-purple-600/80 to-purple-700/80 border border-purple-500/30 text-white hover:border-cyan-400/40 hover:shadow-[0_0_20px_rgba(168,85,247,0.2)] active:scale-[0.99]'
+                                : 'opacity-20 cursor-not-allowed bg-white/[0.02] border border-white/[0.04] text-slate-700'}`}>
                             Next →
                         </button>
                     </div>
                 )}
             </div>
 
-            {/* ═══ RIGHT PANEL: Preview ═══ */}
+            {/* ═══ RIGHT PANEL: Browser Preview + Chat ═══ */}
             <div className="hidden md:flex relative z-10 flex-1 flex-col p-6 md:p-10 sticky top-0 h-screen overflow-y-auto">
-                <div className={`text-[10px] font-bold uppercase tracking-widest mb-4 ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>Live Preview</div>
+                <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-slate-600 mb-4">Live Preview</div>
 
-                <LiveMockup businessName={formData.name} palette={palette} design={design} features={features} />
+                <LiveMockup businessName={formData.name} palette={palette} design={design} features={features} tier={tier} />
 
-                {/* Simple AI Chat */}
+                {/* ── Simple AI Chat ── */}
                 {showChat && (
-                    <div className={`mt-4 rounded-xl border flex flex-col ${isDark ? 'bg-black/40 border-white/10' : 'bg-white border-slate-200'}`} style={{ maxHeight: '220px' }}>
-                        <div className="px-3 py-2 flex items-center gap-2" style={{ borderBottom: isDark ? '1px solid rgba(255,255,255,0.05)' : '1px solid #e2e8f0' }}>
-                            <span className="text-xs">🤖</span>
-                            <span className={`text-[10px] font-bold uppercase tracking-widest ${isDark ? 'text-cyan-400' : 'text-purple-600'}`}>Simple AI</span>
+                    <div className="mt-4 rounded-2xl border border-white/[0.06] backdrop-blur-xl bg-white/[0.02] flex flex-col shadow-[0_8px_30px_rgba(0,0,0,0.2)]" style={{ maxHeight: '220px' }}>
+                        <div className="px-4 py-2.5 flex items-center gap-2 border-b border-white/[0.04]">
+                            <span className="w-5 h-5 rounded-full bg-gradient-to-br from-purple-500 to-cyan-400 flex items-center justify-center text-[8px]">🤖</span>
+                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-400">Simple AI</span>
                         </div>
-                        <div className="flex-1 overflow-y-auto px-3 py-2 space-y-2" style={{ minHeight: '80px' }}>
+                        <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2" style={{ minHeight: '80px' }}>
                             {chatMessages.length === 0 && (
-                                <p className={`text-xs italic ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>Tell me what else you want — I'll customize your site.</p>
+                                <p className="text-xs italic text-slate-600">Tell me what else you want — I'll customize your site.</p>
                             )}
                             {chatMessages.map((m, i) => (
-                                <div key={i} className={`text-xs p-2 rounded-lg max-w-[85%] ${m.role === 'user'
-                                    ? `ml-auto ${isDark ? 'bg-purple-900/40 text-white' : 'bg-purple-100 text-purple-900'}`
-                                    : `${isDark ? 'bg-white/5 text-slate-300' : 'bg-slate-50 text-slate-700'}`}`}>
+                                <div key={i} className={`text-xs p-2.5 rounded-xl max-w-[85%] ${m.role === 'user'
+                                    ? 'ml-auto bg-purple-900/40 text-white border border-purple-500/10'
+                                    : 'bg-white/[0.03] text-slate-300 border border-white/[0.04]'}`}>
                                     {m.text}
                                 </div>
                             ))}
                         </div>
-                        <div className="flex gap-1 p-2" style={{ borderTop: isDark ? '1px solid rgba(255,255,255,0.05)' : '1px solid #e2e8f0' }}>
+                        <div className="flex gap-2 p-3 border-t border-white/[0.04]">
                             <input value={chatInput} onChange={e => setChatInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && sendChat()}
                                 placeholder="Type here..."
-                                className={`flex-1 px-3 py-2 rounded-lg text-xs focus:outline-none ${isDark ? 'bg-white/5 text-white border border-white/10' : 'bg-slate-50 text-slate-900 border border-slate-200'}`} />
-                            <button onClick={sendChat} className={`px-3 py-2 rounded-lg text-xs font-bold ${isDark ? 'bg-cyan-500/20 text-cyan-400' : 'bg-purple-100 text-purple-600'}`}>Send</button>
+                                className="flex-1 px-3 py-2 rounded-lg text-xs bg-white/[0.03] text-white border border-white/[0.06] placeholder:text-slate-700 focus:outline-none focus:border-cyan-500/30" />
+                            <button onClick={sendChat} className="px-4 py-2 rounded-lg text-xs font-bold bg-gradient-to-r from-purple-600/30 to-cyan-500/20 text-cyan-400 border border-cyan-500/20 hover:border-cyan-400/40 transition-all">
+                                Send
+                            </button>
                         </div>
                     </div>
                 )}
